@@ -11,13 +11,18 @@ import {
 } from "lucide-react";
 import { PiLoginButton } from "@/components/pi-login-button";
 
+const DOCKER_HUB_URL =
+  "https://hub.docker.com/r/aerialcroatia/mediaforge-prompt-doctor";
+const GITHUB_URL =
+  "https://github.com/sjstarky-a11y/directors-cut-ai-pro";
+
 export default function HomePage() {
   return (
-    <main className="min-h-screen overflow-hidden bg-gradient-to-br from-gray-950 via-purple-950 to-gray-950 text-white">
-      <div className="mx-auto max-w-7xl px-5 py-6 sm:px-8">
-        <header className="flex flex-wrap items-center justify-between gap-4">
+    <main className="min-h-screen bg-[#07070d] text-white">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <header className="flex items-center justify-between py-6">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-lg font-bold shadow-lg shadow-purple-950/40">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 font-bold">
               DC
             </div>
 
@@ -27,7 +32,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-sm text-gray-400">
-                Prompt and pre-production studio
+                AI video pre-production platform
               </p>
             </div>
           </Link>
@@ -41,43 +46,49 @@ export default function HomePage() {
           <div className="relative mx-auto max-w-5xl text-center">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-sm text-purple-200">
               <Sparkles className="h-4 w-4" />
-              Prompt Doctor Beta is available now
+              MediaForge Prompt Doctor V1.0 is available now
             </div>
 
             <h2 className="text-4xl font-bold leading-tight sm:text-6xl lg:text-7xl">
               Turn rough ideas into
               <span className="block bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
-                production-ready video plans.
+                production-ready video prompts.
               </span>
             </h2>
 
             <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-400 sm:text-xl sm:leading-8">
-              Improve weak prompts, define camera direction,
-              strengthen lighting and mood, create negative prompts
-              and build practical shot lists for AI video production.
+              Diagnose weak prompts, preserve the original concept, strengthen
+              camera and cinematic direction, and build practical shot lists
+              with a local AI workflow.
             </p>
 
             <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
-                href="/prompt-doctor"
+                href={DOCKER_HUB_URL}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex h-12 items-center justify-center rounded-md bg-gradient-to-r from-purple-600 to-pink-600 px-7 text-base font-medium transition hover:from-purple-700 hover:to-pink-700"
               >
                 <Sparkles className="mr-2 h-5 w-5" />
-                Open Prompt Doctor
+                Get Prompt Doctor
               </Link>
 
               <Link
-                href="/editor"
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex h-12 items-center justify-center rounded-md border border-gray-700 bg-transparent px-7 text-base font-medium text-gray-300 transition hover:bg-gray-800"
               >
-                <Clapperboard className="mr-2 h-5 w-5" />
-                Scene Planner Preview
+                <ArrowRight className="mr-2 h-5 w-5" />
+                View on GitHub
               </Link>
             </div>
 
-            <p className="mt-4 text-sm text-emerald-300/80">
-              The current Prompt Doctor works locally in your browser.
-              Your prompt is not sent to an external AI provider.
+            <p className="mx-auto mt-4 max-w-4xl text-sm leading-6 text-emerald-300/80">
+              MediaForge Prompt Doctor runs locally through Pi SoloHost and
+              Docker Model Runner. Your prompts are processed on your own
+              computer and are not sent to an external AI provider by the
+              Prompt Doctor runtime.
             </p>
           </div>
         </section>
@@ -85,11 +96,11 @@ export default function HomePage() {
         <section className="grid gap-5 pb-12 md:grid-cols-3">
           <FeatureCard
             icon={<Sparkles className="h-6 w-6" />}
-            badge="Available now"
-            title="Prompt Doctor"
-            description="Transform a rough idea into a structured prompt with camera direction, lighting, negative constraints, continuity notes and a practical shot plan."
+            badge="Available · V1.0"
+            title="MediaForge Prompt Doctor"
+            description="Diagnose and repair rough AI-video prompts while preserving the original idea, subject, action and explicit constraints."
             href="/prompt-doctor"
-            linkLabel="Open workspace"
+            linkLabel="Explore Prompt Doctor"
           />
 
           <FeatureCard
@@ -117,21 +128,24 @@ export default function HomePage() {
 
             <div>
               <h3 className="text-xl font-bold">
-                Simple, private and useful from day one
+                Local AI, private by design
               </h3>
 
               <p className="mt-2 max-w-4xl leading-7 text-gray-400">
-                The first public version focuses on prompt improvement
-                and production planning. Advanced AI generation, media
-                processing and paid features will be introduced only
-                after they are fully functional and ready for real users.
+                MediaForge Prompt Doctor V1 is the first stable local AI
+                module in the Director&apos;s Cut AI Pro project. It focuses on
+                prompt diagnosis, semantic fidelity and practical production
+                direction before generation. The current V1 runtime is
+                validated with Qwen 2.5 3B through Pi SoloHost and Docker
+                Model Runner.
               </p>
             </div>
           </div>
         </section>
 
         <footer className="border-t border-gray-800 py-6 text-center text-sm text-gray-500">
-          Director&apos;s Cut AI Pro · Built for video creators in the Pi ecosystem
+          Director&apos;s Cut AI Pro · Home of MediaForge Prompt Doctor · Built
+          for video creators in the Pi ecosystem
         </footer>
       </div>
     </main>
@@ -154,9 +168,9 @@ function FeatureCard({
   linkLabel?: string;
 }) {
   const content = (
-    <article className="group flex h-full flex-col rounded-2xl border border-gray-800 bg-gray-900/65 p-6 transition hover:border-purple-500/40 hover:bg-gray-900/90">
-      <div className="mb-5 flex items-start justify-between gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/10 text-purple-300">
+    <article className="group flex h-full flex-col rounded-2xl border border-gray-800 bg-gray-900/60 p-6 backdrop-blur transition hover:border-purple-500/40 hover:bg-gray-900/80">
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-500/10 text-purple-300">
           {icon}
         </div>
 
@@ -180,5 +194,11 @@ function FeatureCard({
     </article>
   );
 
-  return href ? <Link href={href}>{content}</Link> : content;
+  return href ? (
+    <Link href={href} className="block h-full">
+      {content}
+    </Link>
+  ) : (
+    content
+  );
 }
