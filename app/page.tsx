@@ -46,7 +46,7 @@ export default function HomePage() {
           <div className="relative mx-auto max-w-5xl text-center">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-sm text-purple-200">
               <Sparkles className="h-4 w-4" />
-              MediaForge Prompt Doctor V1.0 is available now
+              MediaForge Prompt Studio V1.0 is available now
             </div>
 
             <h2 className="text-4xl font-bold leading-tight sm:text-6xl lg:text-7xl">
@@ -59,7 +59,7 @@ export default function HomePage() {
             <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-400 sm:text-xl sm:leading-8">
               Diagnose weak prompts, preserve the original concept, strengthen
               camera and cinematic direction, and build practical shot lists
-              with a local AI workflow.
+              with a private local AI workspace.
             </p>
 
             <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
@@ -70,7 +70,7 @@ export default function HomePage() {
                 className="inline-flex h-12 items-center justify-center rounded-md bg-gradient-to-r from-purple-600 to-pink-600 px-7 text-base font-medium transition hover:from-purple-700 hover:to-pink-700"
               >
                 <Sparkles className="mr-2 h-5 w-5" />
-                Get Prompt Doctor
+                Get Prompt Studio
               </Link>
 
               <Link
@@ -85,10 +85,10 @@ export default function HomePage() {
             </div>
 
             <p className="mx-auto mt-4 max-w-4xl text-sm leading-6 text-emerald-300/80">
-              MediaForge Prompt Doctor runs locally through Pi SoloHost and
+              MediaForge Prompt Studio runs locally through Pi SoloHost and
               Docker Model Runner. Your prompts are processed on your own
               computer and are not sent to an external AI provider by the
-              Prompt Doctor runtime.
+              Studio runtime.
             </p>
           </div>
         </section>
@@ -97,8 +97,8 @@ export default function HomePage() {
           <FeatureCard
             icon={<Sparkles className="h-6 w-6" />}
             badge="Available · V1.0"
-            title="MediaForge Prompt Doctor"
-            description="Diagnose and repair rough AI-video prompts while preserving the original idea, subject, action and explicit constraints."
+            title="Prompt Doctor"
+            description="The flagship Studio tool. Diagnose and repair rough AI-video prompts while preserving the original idea, subject, action and explicit constraints."
             href="/prompt-doctor"
             linkLabel="Explore Prompt Doctor"
           />
@@ -132,19 +132,19 @@ export default function HomePage() {
               </h3>
 
               <p className="mt-2 max-w-4xl leading-7 text-gray-400">
-                MediaForge Prompt Doctor V1 is the first stable local AI
-                module in the Director&apos;s Cut AI Pro project. It focuses on
-                prompt diagnosis, semantic fidelity and practical production
-                direction before generation. The current V1 runtime is
-                validated with Qwen 2.5 3B through Pi SoloHost and Docker
-                Model Runner.
+                MediaForge Prompt Studio V1 is the first stable local AI
+                workspace in the Director&apos;s Cut AI Pro project. Its flagship
+                Prompt Doctor focuses on prompt diagnosis, semantic fidelity
+                and practical production direction before generation. The
+                current V1 runtime is validated with Qwen 2.5 3B through Pi
+                SoloHost and Docker Model Runner.
               </p>
             </div>
           </div>
         </section>
 
         <footer className="border-t border-gray-800 py-6 text-center text-sm text-gray-500">
-          Director&apos;s Cut AI Pro · Home of MediaForge Prompt Doctor · Built
+          Director&apos;s Cut AI Pro · Home of MediaForge Prompt Studio · Built
           for video creators in the Pi ecosystem
         </footer>
       </div>
