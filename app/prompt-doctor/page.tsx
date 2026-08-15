@@ -3,12 +3,19 @@
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import {
+  CheckCircle2,
   Clipboard,
+  Cpu,
   Download,
+  ExternalLink,
+  HardDriveDownload,
   Home,
+  MonitorCog,
   RotateCcw,
   Save,
+  ShieldCheck,
   Sparkles,
+  Terminal,
 } from "lucide-react";
 import {
   formatPromptDoctorResult,
@@ -21,6 +28,18 @@ import {
 } from "@/lib/prompt-doctor-engine";
 
 const STORAGE_KEY = "directors-cut-prompt-doctor-projects";
+
+const RELEASE_URL =
+  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/tag/v0.2";
+const WINDOWS_URL =
+  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.2/MediaForge-Prompt-Studio-v0.2-Windows-x64.zip";
+const LINUX_URL =
+  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.2/MediaForge-Prompt-Studio-v0.2-Linux-x86_64.tar.gz";
+const CHECKSUM_URL =
+  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.2/SHA256SUMS-v0.2.txt";
+const GITHUB_URL =
+  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio";
+const ISSUES_URL = `${GITHUB_URL}/issues`;
 
 type SavedProject = {
   id: string;
@@ -255,6 +274,30 @@ export default function PromptDoctorPage() {
             </Link>
           </div>
         </header>
+
+        <section className="mb-4 overflow-hidden rounded-[22px] border border-purple-400/30 bg-gradient-to-br from-purple-500/15 via-[#12141b] to-cyan-400/10 p-5 shadow-2xl sm:p-7">
+          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.08em] text-emerald-300">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                v0.2 Public Preview is available
+              </div>
+              <h2 className="text-2xl font-black tracking-tight sm:text-3xl">
+                Try the browser demo — or download the full local workspace.
+              </h2>
+              <p className="mt-3 max-w-4xl text-sm leading-6 text-gray-300">
+                The demo below runs immediately in your browser. The downloadable
+                application adds local AI generation, Fidelity Guard, Visual Proof
+                Frame, Model Adapter, and automatic CPU or NVIDIA runtime selection.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 sm:flex-row lg:flex-col">
+              <DownloadButton href={WINDOWS_URL} label="Download for Windows" />
+              <DownloadButton href={LINUX_URL} label="Download for Linux" secondary />
+            </div>
+          </div>
+        </section>
 
         <div className="grid gap-4 lg:grid-cols-[0.93fr_1.07fr]">
           <section className="overflow-hidden rounded-[22px] border border-[#2b2f39] bg-[#12141b] shadow-2xl">
@@ -583,11 +626,280 @@ export default function PromptDoctorPage() {
           </section>
         </div>
 
-        <footer className="py-4 text-center text-xs text-gray-600">
-          Director&apos;s Cut AI Pro · MediaForge Prompt Studio · Prompt Doctor browser workspace
+        <section className="mt-16 scroll-mt-6" id="mediaforge-v02">
+          <SectionHeading
+            eyebrow="MediaForge Prompt Studio v0.2"
+            title="One local workflow from rough idea to video-ready prompt."
+            description="Built for creators who want useful AI assistance without exposing their creative work to a hosted prompt service."
+          />
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <InfoCard
+              number="01"
+              title="Diagnose"
+              description="Prompt Doctor finds ambiguity, missing direction and contradictions before generation."
+            />
+            <InfoCard
+              number="02"
+              title="Protect"
+              description="Fidelity Guard checks whether the result preserves the subject, action, setting and explicit constraints."
+            />
+            <InfoCard
+              number="03"
+              title="Confirm"
+              description="Visual Proof Frame generates a fast local SDXL still so you can approve or regenerate the scene."
+            />
+            <InfoCard
+              number="04"
+              title="Adapt"
+              description="Model Adapter transparently prepares approved wording for Generic Video, Runway, Veo or Kling."
+            />
+          </div>
+        </section>
+
+        <section className="mt-16 grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+          <div className="overflow-hidden rounded-[24px] border border-[#2b2f39] bg-[#11131a] p-2 shadow-2xl">
+            <img
+              src="/mediaforge-v02-workspace.webp"
+              alt="MediaForge Prompt Studio v0.2 local workspace running in a browser"
+              className="w-full rounded-[18px]"
+            />
+          </div>
+          <div>
+            <SectionHeading
+              eyebrow="Simple by default"
+              title="The user sees CPU or GPU. MediaForge handles the rest."
+              description="Hardware detection selects the compatible runtime automatically. Model and backend details remain available in Developer settings without crowding the normal workflow."
+              compact
+            />
+            <div className="mt-5 space-y-3">
+              <FeatureLine icon={<Cpu className="h-5 w-5" />} title="CPU path" text="Compatible OpenVINO image generation and llama.cpp Prompt Doctor fallback." />
+              <FeatureLine icon={<MonitorCog className="h-5 w-5" />} title="NVIDIA path" text="CUDA acceleration with a tested low-memory mode for older 4 GB cards." />
+              <FeatureLine icon={<ShieldCheck className="h-5 w-5" />} title="Developer control" text="Optional installed-model selection and clear runtime reporting when needed." />
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-16 grid gap-6 md:grid-cols-2">
+          <ShowcaseCard
+            image="/mediaforge-v02-proof-frame.webp"
+            alt="A Visual Proof Frame generated locally in MediaForge"
+            title="Visual Proof Frame"
+            description="Confirm the subject, location and visual direction before spending credits or time in an external video generator."
+          />
+          <ShowcaseCard
+            image="/mediaforge-v02-model-adapter.webp"
+            alt="MediaForge Model Adapter with a Generic Video target"
+            title="Transparent Model Adapter"
+            description="If no model-specific change is required, MediaForge says Compatible as-is. When wording changes, the reason is shown instead of hidden."
+          />
+        </section>
+
+        <section className="mt-16" id="download">
+          <SectionHeading
+            eyebrow="Download & install"
+            title="Choose your operating system. The setup stays simple."
+            description="Docker Desktop is the only major prerequisite. AI models are downloaded locally after installation and are not bundled inside the small release archive."
+          />
+
+          <div className="mt-8 grid gap-5 lg:grid-cols-2">
+            <InstallCard
+              title="Windows 10/11"
+              badge="CPU + NVIDIA"
+              href={WINDOWS_URL}
+              downloadLabel="Download Windows ZIP"
+              steps={[
+                "Install and start Docker Desktop using Linux containers.",
+                "Extract the complete ZIP into a new folder.",
+                "Read START-HERE-WINDOWS.txt, then double-click MediaForge-Windows.cmd.",
+                "MediaForge detects CPU or NVIDIA support, installs what it needs, and opens the app.",
+              ]}
+            />
+            <InstallCard
+              title="Linux x86_64"
+              badge="CPU + NVIDIA path"
+              href={LINUX_URL}
+              downloadLabel="Download Linux archive"
+              steps={[
+                "Install Docker Engine with the Compose plugin.",
+                "Extract the .tar.gz archive into a new folder.",
+                "Read START-HERE-LINUX.txt, then run ./MediaForge-Linux.sh.",
+                "MediaForge detects available hardware and starts the compatible local runtime.",
+              ]}
+            />
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/10 p-5">
+            <div className="flex gap-3">
+              <HardDriveDownload className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" />
+              <div>
+                <h3 className="font-bold text-amber-100">First start downloads several gigabytes</h3>
+                <p className="mt-1 text-sm leading-6 text-amber-100/70">
+                  Visual Proof Frame needs a large local SDXL model. The application
+                  shows its preparation status and disables proof generation until it
+                  is ready. Prompt Doctor remains available during the download. Future
+                  starts reuse the local model cache.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-16 grid gap-5 lg:grid-cols-3">
+          <DetailCard
+            icon={<ShieldCheck className="h-6 w-6" />}
+            title="Privacy"
+            text="Prompt and image inference runs through local services on your computer. The Studio runtime does not require a hosted AI provider."
+          />
+          <DetailCard
+            icon={<Terminal className="h-6 w-6" />}
+            title="Validated paths"
+            text="Windows CPU/OpenVINO, Windows NVIDIA CUDA low-memory on a GTX 1050 4 GB, and Ubuntu 24.04 WSL2 CPU/OpenVINO have completed real tests."
+          />
+          <DetailCard
+            icon={<MonitorCog className="h-6 w-6" />}
+            title="Current scope"
+            text="This is a pre-release. Native Linux NVIDIA support is included but still needs broader hardware validation. macOS support is planned later."
+          />
+        </section>
+
+        <section className="mt-16 rounded-[24px] border border-[#2b2f39] bg-[#12141b] p-6 sm:p-8">
+          <SectionHeading
+            eyebrow="Before you start"
+            title="Requirements and useful links"
+            description="Keep Docker running, allow enough disk space for local models, and use the checksum file if you want to verify the download."
+            compact
+          />
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <ResourceLink href={RELEASE_URL} label="v0.2 release notes" />
+            <ResourceLink href={CHECKSUM_URL} label="SHA-256 checksums" />
+            <ResourceLink href={GITHUB_URL} label="Source code on GitHub" />
+            <ResourceLink href={ISSUES_URL} label="Report an issue" />
+          </div>
+        </section>
+
+        <footer className="mt-14 border-t border-[#252933] py-7 text-center text-xs leading-5 text-gray-500">
+          Director&apos;s Cut AI Pro · MediaForge Prompt Studio v0.2 Public Preview<br />
+          Local AI tools for cinematic video creation
         </footer>
       </div>
     </main>
+  );
+}
+
+function DownloadButton({ href, label, secondary = false }: {
+  href: string;
+  label: string;
+  secondary?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className={`inline-flex h-11 min-w-[220px] items-center justify-center rounded-xl px-5 text-sm font-bold transition ${
+        secondary
+          ? "border border-[#3a3e49] bg-[#15171e] text-gray-100 hover:bg-[#1d2028]"
+          : "bg-gradient-to-r from-purple-500 to-cyan-400 text-[#08090f] hover:brightness-110"
+      }`}
+    >
+      <Download className="mr-2 h-4 w-4" />
+      {label}
+    </Link>
+  );
+}
+
+function SectionHeading({ eyebrow, title, description, compact = false }: {
+  eyebrow: string;
+  title: string;
+  description: string;
+  compact?: boolean;
+}) {
+  return (
+    <div className={compact ? "max-w-2xl" : "mx-auto max-w-4xl text-center"}>
+      <p className="text-xs font-black uppercase tracking-[0.14em] text-emerald-300">{eyebrow}</p>
+      <h2 className={`mt-3 font-black tracking-tight ${compact ? "text-3xl" : "text-3xl sm:text-5xl"}`}>{title}</h2>
+      <p className="mt-4 text-sm leading-7 text-gray-400 sm:text-base">{description}</p>
+    </div>
+  );
+}
+
+function InfoCard({ number, title, description }: { number: string; title: string; description: string }) {
+  return (
+    <article className="rounded-2xl border border-[#2b2f39] bg-[#12141b] p-5">
+      <span className="text-sm font-black text-purple-300">{number}</span>
+      <h3 className="mt-3 text-xl font-bold">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-gray-400">{description}</p>
+    </article>
+  );
+}
+
+function FeatureLine({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
+  return (
+    <div className="flex gap-3 rounded-2xl border border-[#2b2f39] bg-[#12141b] p-4">
+      <span className="mt-0.5 text-emerald-300">{icon}</span>
+      <div><h3 className="font-bold">{title}</h3><p className="mt-1 text-sm leading-6 text-gray-400">{text}</p></div>
+    </div>
+  );
+}
+
+function ShowcaseCard({ image, alt, title, description }: { image: string; alt: string; title: string; description: string }) {
+  return (
+    <article className="overflow-hidden rounded-[24px] border border-[#2b2f39] bg-[#12141b] p-3">
+      <div className="overflow-hidden rounded-[18px] border border-[#30343e] bg-[#0d0f15]">
+        <img src={image} alt={alt} className="aspect-[16/10] w-full object-cover object-top" />
+      </div>
+      <div className="p-4 sm:p-5">
+        <h3 className="text-xl font-bold">{title}</h3>
+        <p className="mt-2 text-sm leading-6 text-gray-400">{description}</p>
+      </div>
+    </article>
+  );
+}
+
+function InstallCard({ title, badge, href, downloadLabel, steps }: {
+  title: string;
+  badge: string;
+  href: string;
+  downloadLabel: string;
+  steps: string[];
+}) {
+  return (
+    <article className="rounded-[24px] border border-[#2b2f39] bg-[#12141b] p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h3 className="text-2xl font-black">{title}</h3>
+        <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">{badge}</span>
+      </div>
+      <ol className="mt-5 space-y-4">
+        {steps.map((step, index) => (
+          <li key={step} className="flex gap-3 text-sm leading-6 text-gray-300">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-500/15 text-xs font-bold text-purple-300">{index + 1}</span>
+            {step}
+          </li>
+        ))}
+      </ol>
+      <Link href={href} target="_blank" rel="noreferrer" className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-xl bg-gradient-to-r from-purple-500 to-cyan-400 px-5 text-sm font-black text-[#08090f] transition hover:brightness-110">
+        <Download className="mr-2 h-4 w-4" />{downloadLabel}
+      </Link>
+    </article>
+  );
+}
+
+function DetailCard({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
+  return (
+    <article className="rounded-2xl border border-[#2b2f39] bg-[#12141b] p-5">
+      <div className="text-emerald-300">{icon}</div>
+      <h3 className="mt-4 text-lg font-bold">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-gray-400">{text}</p>
+    </article>
+  );
+}
+
+function ResourceLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link href={href} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl border border-[#30343e] bg-[#0d0f15] px-4 py-3 text-sm font-semibold text-gray-200 transition hover:border-purple-400/50 hover:bg-[#15171e]">
+      {label}<ExternalLink className="h-4 w-4 text-gray-500" />
+    </Link>
   );
 }
 

@@ -1,220 +1,70 @@
 # Director's Cut AI Pro
 
-**AI video pre-production tools for creators.**
+AI video pre-production tools for creators and the public home of **MediaForge Prompt Studio**.
 
-Director's Cut AI Pro is a Pi Network-oriented video pre-production project for prompt improvement, scene planning, shot organization and practical AI-video workflows.
+## MediaForge Prompt Studio v0.2 Public Preview
 
-Its first stable local AI product is **MediaForge Prompt Studio V1.0**.
+MediaForge is a private local AI workspace that helps creators move from a rough idea to a stronger, reviewed prompt for AI video generation.
 
-> **Fix the prompt before you generate.**
+Its current workflow includes:
 
----
+- **Prompt Doctor** for Improve, Diagnose, Cinematic, Commercial and Shot List workflows.
+- **Fidelity Guard** to protect the original subject, action, setting and explicit constraints.
+- **Visual Proof Frame** for a fast local SDXL scene preview.
+- **Model Adapter** for Generic Video, Runway Gen-4.5, Veo 3.1 and Kling VIDEO 3.0.
+- Automatic **CPU or NVIDIA** runtime selection with optional Developer controls.
+- Reproducible Windows and Linux release packages with SHA-256 checksums.
 
-## MediaForge Prompt Studio V1.0
+## Download
 
-MediaForge Prompt Studio is a local AI workspace for video creators, filmmakers, advertisers and AI-video users.
+- [v0.2 release and notes](https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/tag/v0.2)
+- [Windows x64 ZIP](https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.2/MediaForge-Prompt-Studio-v0.2-Windows-x64.zip)
+- [Linux x86_64 archive](https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.2/MediaForge-Prompt-Studio-v0.2-Linux-x86_64.tar.gz)
+- [SHA-256 checksums](https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.2/SHA256SUMS-v0.2.txt)
 
-Its flagship tool, **Prompt Doctor**, is designed around **semantic fidelity**: preserve the user's stated subject, action, setting, continuity and explicit constraints, then add useful production direction only where appropriate.
+The release archives do not bundle AI models. The first start downloads the required local models, including a Visual Proof model of several gigabytes. Prompt Doctor remains usable while the image model is prepared.
 
-### Prompt Doctor workflows
+## Current validation
 
-- **Improve** — strengthen rough or incomplete prompts while preserving the original concept.
-- **Diagnose** — identify ambiguity, missing direction, conflicts and weak prompt structure.
-- **Cinematic** — add controlled cinematic direction for composition, camera, atmosphere and visual storytelling.
-- **Commercial** — use a fidelity-first deterministic workflow designed to avoid unsupported invention of branding, product materials, colors, benefits, props or story elements.
-- **Shot List** — turn a scene idea into practical shot-by-shot production direction.
+| Platform | Prompt runtime | Visual Proof runtime | Status |
+| --- | --- | --- | --- |
+| Windows without NVIDIA | CPU / llama.cpp | CPU / OpenVINO SDXL INT8 | Tested |
+| Windows GTX 1050 4 GB | NVIDIA CUDA | CUDA low-memory / Diffusers SDXL | Tested end-to-end |
+| Ubuntu 24.04 WSL2 | CPU / llama.cpp | CPU / OpenVINO SDXL INT8 | Tested |
+| Native Linux NVIDIA | CUDA with CPU fallback | CUDA / Diffusers SDXL | Included; broader hardware validation pending |
 
-### Supported formats
-
-- 16:9
-- 9:16
-- 1:1
-
-### V1 runtime
-
-- **Product:** MediaForge Prompt Studio
-- **Flagship tool:** Prompt Doctor
-- **Release:** `1.0.0`
-- **Docker image:** `aerialcroatia/mediaforge-prompt-doctor:1.0.0`
-- **Stable tag:** `aerialcroatia/mediaforge-prompt-doctor:latest`
-- **Validated model:** `ai/qwen2.5:3B-Q4_K_M`
-- **Output language:** English
-- **Runtime:** Pi SoloHost + Docker Model Runner
-- **Health endpoint:** `/health`
-
----
-
-## Product structure
-
-Director's Cut AI Pro is the wider public project and pre-production platform.
-
-### MediaForge Prompt Studio
-**Available · V1.0**
-
-The stable local AI workspace distributed through Pi SoloHost.
-
-### Prompt Doctor
-**Flagship Studio tool**
-
-Diagnoses and repairs rough AI-video prompts while preserving the creator's original intent.
-
-### Scene & Shot Planner
-**Preview**
-
-Explores scene structure, shot order, duration and production notes.
-
-### AI Video Editor
-**Future phase**
-
-Planned workspace for media analysis, continuity, editing guidance and AI-assisted video creation.
-
----
-
-## Current project features
-
-The wider Director's Cut AI Pro project includes:
-
-- Pi Network authentication
-- MediaForge Prompt Studio
-- Prompt Doctor
-- Camera, lighting and continuity guidance
-- Automatic shot-plan generation
-- Prompt Doctor to Scene Planner transfer
-- Editable scenes and shot order
-- Local browser project storage
-- TXT and JSON export
-- Scene & Shot Planner preview
-- AI Video Editor roadmap
-
----
+macOS support is planned for a later milestone.
 
 ## Local AI and privacy
 
-**MediaForge Prompt Studio V1 runs locally through Pi SoloHost and Docker Model Runner.**
+The downloadable Studio processes prompts and proof frames through services running on the user's own computer. It does not require a hosted AI provider. Users should separately review the privacy behavior of Docker, Pi Desktop and any optional third-party video services they choose to use.
 
-Prompt generation in the local V1 runtime is processed on the user's own computer and does not require an external hosted AI provider.
+## Website
 
-The public Director's Cut AI Pro web application also contains browser-based project features, Pi authentication and preview modules. Users should separately review the privacy behavior of Pi Desktop, Docker and any optional third-party services they enable.
+- [Director's Cut AI Pro](https://directors-cut-ai-pro.vercel.app/)
+- [MediaForge Prompt Doctor, documentation and downloads](https://directors-cut-ai-pro.vercel.app/prompt-doctor)
 
-Environment secrets are not stored in this repository.
-
----
-
-## Live project
-
-### Public web app
-
-- **Web:** https://directors-cut-ai-pro.vercel.app
-- **PiNet:** https://directorscutaipr0154.pinet.com
-
-### Pi SoloHost
-
-- **App:** MediaForge Prompt Studio
-- **App ID:** `sjstarky/mediaforge-prompt-studio`
-- **Category:** Utility
-- **Status:** Listed in Discover
-
-### Docker Hub
-
-- **Runtime image:** https://hub.docker.com/r/aerialcroatia/mediaforge-prompt-doctor
-
-### Stable image
-
-```text
-aerialcroatia/mediaforge-prompt-doctor:1.0.0
-```
-
----
-
-## Run MediaForge Prompt Studio locally
-
-MediaForge Prompt Studio V1 is distributed as a containerized local application intended for Pi SoloHost / Docker Model Runner environments.
-
-The validated V1 model is:
-
-```text
-ai/qwen2.5:3B-Q4_K_M
-```
-
-The application uses Docker Model Runner for local inference.
-
-Performance depends on the user's local hardware.
-
----
-
-## Release notes — V1.0.0
-
-First stable MediaForge Prompt Studio runtime release.
-
-### Included
-
-- Final Prompt Studio UI
-- Prompt Doctor
-- Improve mode
-- Diagnose mode
-- Cinematic mode
-- Commercial fidelity mode
-- Shot List mode
-- 16:9, 9:16 and 1:1 format selection
-- Docker Model Runner integration
-- Qwen 2.5 3B validated runtime
-- Local health endpoint
-- Pi SoloHost-compatible package
-- Docker Hub release image
-- Clean-install validation
-- End-to-end local inference validation
-
-### Commercial fidelity mode
-
-Commercial mode uses a deterministic fidelity-first path designed to avoid unsupported invention of:
-
-- branding
-- product materials
-- colors
-- product benefits
-- props
-- story elements
-
----
+The website also includes a lightweight browser-local Prompt Doctor demo. The complete local AI workflow is available in the downloadable v0.2 application.
 
 ## Development
 
-The public Director's Cut AI Pro web application is built with:
+The website uses Next.js, React, TypeScript and Tailwind CSS.
 
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-
-The MediaForge Prompt Studio local runtime uses:
-
-- Python
-- FastAPI
-- Uvicorn
-- Docker
-- Docker Model Runner
-- Qwen 2.5 3B
-
----
-
-## Repository
-
-This repository contains the public Director's Cut AI Pro web application and project documentation.
-
-The stable MediaForge Prompt Studio V1 runtime is currently distributed through Docker Hub using:
-
-```text
-aerialcroatia/mediaforge-prompt-doctor:1.0.0
+```bash
+pnpm install
+pnpm dev
 ```
 
-The Docker repository name reflects the Prompt Doctor runtime component, while the public SoloHost product is **MediaForge Prompt Studio**.
+Production check:
 
----
+```bash
+pnpm build
+```
 
-## Status
+## Project status
 
-**Director's Cut AI Pro:** active development  
-**MediaForge Prompt Studio:** stable V1.0 release  
-**Prompt Doctor:** flagship Studio tool  
-**Scene & Shot Planner:** preview  
-**AI Video Editor:** future phase
+- **Director's Cut AI Pro:** active development
+- **MediaForge Prompt Studio:** v0.2 Public Preview
+- **Prompt Doctor:** available
+- **Scene & Shot Planner:** preview
+- **AI Video Editor:** future phase

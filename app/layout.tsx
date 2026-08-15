@@ -6,9 +6,17 @@ import { AppWrapper } from "@/components/app-wrapper";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Director's Cut AI Pro",
-  description: "AI-powered tools for video creators and filmmakers.",
+  title: "Director's Cut AI Pro · MediaForge Prompt Studio",
+  description:
+    "Download MediaForge Prompt Studio v0.2 for Windows or Linux: a private local AI workspace for stronger video prompts, fidelity protection and visual proof frames.",
   generator: "Director's Cut AI Pro",
+  keywords: [
+    "MediaForge Prompt Studio",
+    "AI video prompts",
+    "local AI",
+    "Prompt Doctor",
+    "Director's Cut AI Pro",
+  ],
 };
 
 export default function RootLayout({
