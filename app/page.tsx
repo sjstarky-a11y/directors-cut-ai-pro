@@ -9,7 +9,6 @@ import {
   Cpu,
   Download,
   Film,
-  Github,
   MonitorCog,
   ShieldCheck,
   Sparkles,
@@ -22,9 +21,6 @@ const WINDOWS_URL =
   "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.2/MediaForge-Prompt-Studio-v0.2-Windows-x64.zip";
 const LINUX_URL =
   "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.2/MediaForge-Prompt-Studio-v0.2-Linux-x86_64.tar.gz";
-const GITHUB_URL =
-  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio";
-
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#07070d] text-white">
@@ -86,13 +82,13 @@ export default function HomePage() {
                 Download for Windows
               </Link>
               <Link
-                href={GITHUB_URL}
+                href={LINUX_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex h-12 items-center justify-center rounded-md border border-gray-700 bg-transparent px-7 text-base font-medium text-gray-300 transition hover:bg-gray-800"
               >
-                <Github className="mr-2 h-5 w-5" />
-                GitHub
+                <Download className="mr-2 h-5 w-5" />
+                Download for Linux
               </Link>
             </div>
 
@@ -151,20 +147,31 @@ export default function HomePage() {
                 <StatusItem icon={<CheckCircle2 className="h-4 w-4" />} text="51 automated tests" />
               </div>
             </div>
-            <Link
-              href={LINUX_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-12 items-center justify-center rounded-xl border border-gray-700 bg-[#11131a] px-6 text-sm font-semibold text-gray-200 transition hover:border-purple-400/50"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Download for Linux
-            </Link>
+            <div className="flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+              <Link
+                href={WINDOWS_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex h-12 items-center justify-center rounded-xl bg-gradient-to-r from-purple-500 to-cyan-400 px-6 text-sm font-bold text-[#08090f] transition hover:brightness-110"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download for Windows
+              </Link>
+              <Link
+                href={LINUX_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex h-12 items-center justify-center rounded-xl border border-gray-700 bg-[#11131a] px-6 text-sm font-semibold text-gray-200 transition hover:border-purple-400/50"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download for Linux
+              </Link>
+            </div>
           </div>
         </section>
 
         <footer className="border-t border-gray-800 py-6 text-center text-sm text-gray-500">
-          Director&apos;s Cut AI Pro · Home of MediaForge Prompt Studio · Built for video creators in the Pi ecosystem
+          Director&apos;s Cut AI Pro · Home of MediaForge Prompt Studio · Built for video creators worldwide, including the Pi ecosystem
         </footer>
       </div>
     </main>

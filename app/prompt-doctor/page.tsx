@@ -78,7 +78,7 @@ export default function PromptDoctorPage() {
             </div>
 
             <div className="overflow-hidden rounded-[24px] border border-[#3a3e49] bg-[#0d0f15] p-2 shadow-2xl">
-              <img src="/mediaforge-v02-workspace.webp" alt="MediaForge Prompt Studio v0.2 local workspace" className="w-full rounded-[18px]" />
+              <img src="/mediaforge-v02-workspace-clean.png" alt="MediaForge Prompt Studio v0.2 local workspace" className="w-full rounded-[18px]" />
             </div>
           </div>
         </section>
@@ -199,6 +199,7 @@ export default function PromptDoctorPage() {
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-gray-300 sm:text-base">Improve the prompt, protect the intention, confirm the scene and then move to video generation.</p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <DownloadButton href={WINDOWS_URL} label="Download for Windows" />
+            <DownloadButton href={LINUX_URL} label="Download for Linux" secondary />
             <Link href={RELEASE_URL} target="_blank" rel="noreferrer" className="inline-flex h-11 items-center justify-center rounded-xl border border-[#3a3e49] bg-[#15171e] px-5 text-sm font-bold text-gray-100 transition hover:bg-[#1d2028]">
               Read release notes <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
