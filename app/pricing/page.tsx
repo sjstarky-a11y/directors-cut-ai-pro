@@ -1,231 +1,141 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, Coins, Download, Sparkles } from "lucide-react";
 import { PiLoginButton } from "@/components/pi-login-button";
-import { PiPaymentModal } from "@/components/pi-payment-modal";
-import { usePiAuth } from "@/contexts/pi-auth-context";
 
-const plans = [
-  {
-    name: "Basic",
-    price: 10,
-    description: "Perfect for getting started",
-    features: [
-      "720p export quality",
-      "10 GB cloud storage",
-      "Basic AI effects",
-      "Email support",
-    ],
-  },
-  {
-    name: "Pro",
-    price: 25,
-    description: "For professional creators",
-    features: [
-      "4K export quality",
-      "100 GB cloud storage",
-      "Advanced AI effects",
-      "Priority support",
-      "Custom branding",
-    ],
-    popular: true,
-  },
-  {
-    name: "Enterprise",
-    price: 50,
-    description: "For teams and studios",
-    features: [
-      "8K export quality",
-      "Unlimited cloud storage",
-      "All AI features",
-      "24/7 dedicated support",
-      "Team collaboration",
-      "API access",
-    ],
-  },
-];
+const plans = ["Basic", "Pro", "Enterprise"];
+
+const RELEASE_URL =
+  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/tag/v0.3";
 
 export default function PricingPage() {
-  const { isAuthenticated } = usePiAuth();
-
-  const [
-    isChecklistPaymentOpen,
-    setIsChecklistPaymentOpen,
-  ] = useState(false);
-
-  const startChecklistPayment = () => {
-    if (!isAuthenticated) {
-      alert(
-        "Please authenticate with Pi before starting the Test-Pi payment."
-      );
-
-      return;
-    }
-
-    setIsChecklistPaymentOpen(true);
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
-      <div className="container mx-auto px-4 py-8">
-        <header className="flex items-center justify-between mb-12">
-          <Link
-            href="/"
-            className="flex items-center gap-3"
-          >
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xl font-bold">
-                DC
-              </span>
+    <main className="min-h-screen bg-[#07070d] text-white">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <header className="flex items-center justify-between gap-4 py-6">
+          <Link href="/" className="flex min-w-0 items-center gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 font-bold">
+              DC
             </div>
-
-            <h1 className="text-2xl font-bold text-white">
-              Director&apos;s Cut AI Pro
-            </h1>
-          </Link>
-
-          <PiLoginButton />
-        </header>
-
-        <div className="max-w-3xl mx-auto text-center mb-10">
-          <h2 className="text-4xl font-bold text-white mb-4">
-            Pi Testnet Payment
-          </h2>
-
-          <p className="text-xl text-gray-400">
-            Complete one verified User-to-App
-            transaction for the Developer Portal
-            checklist.
-          </p>
-        </div>
-
-        <div className="max-w-xl mx-auto mb-14 p-6 rounded-xl border border-purple-500/40 bg-gradient-to-br from-purple-500/10 to-pink-500/10">
-          <div className="flex items-start justify-between gap-6 mb-5">
-            <div>
-              <h3 className="text-2xl font-bold text-white mb-2">
-                Checklist Test Payment
-              </h3>
-
-              <p className="text-gray-400">
-                One Testnet transaction processed
-                through server approval and completion.
+            <div className="min-w-0">
+              <h1 className="truncate text-lg font-bold sm:text-2xl">
+                Director&apos;s Cut AI Pro
+              </h1>
+              <p className="hidden text-sm text-gray-400 sm:block">
+                AI video pre-production platform
               </p>
             </div>
+          </Link>
 
-            <div className="text-right shrink-0">
-              <div className="text-3xl font-bold text-white">
-                1
-              </div>
+          <nav className="flex shrink-0 items-center gap-2 sm:gap-3" aria-label="Primary navigation">
+            <Link
+              href="/"
+              className="inline-flex h-10 items-center justify-center rounded-md border border-gray-700 bg-gray-900/70 px-3 text-sm font-semibold text-gray-200 transition hover:border-purple-400/50 hover:bg-gray-800 sm:px-4"
+            >
+              <ArrowLeft className="mr-1.5 h-4 w-4" />
+              Home
+            </Link>
+            <PiLoginButton />
+          </nav>
+        </header>
 
-              <div className="text-purple-300">
-                Test-π
-              </div>
+        <section className="relative py-14 text-center sm:py-20">
+          <div className="pointer-events-none absolute left-1/2 top-8 h-64 w-64 -translate-x-1/2 rounded-full bg-purple-500/20 blur-3xl" />
+          <div className="relative mx-auto max-w-4xl">
+            <p className="inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-sm font-semibold text-purple-200">
+              <Sparkles className="h-4 w-4" />
+              Transparent public-preview roadmap
+            </p>
+            <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
+              Use the public preview now.
+              <span className="block bg-gradient-to-r from-purple-400 via-fuchsia-400 to-cyan-300 bg-clip-text text-transparent">
+                Future plans will come later.
+              </span>
+            </h2>
+            <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-400 sm:text-xl sm:leading-8">
+              MediaForge Prompt Studio v0.3 is currently available as a free
+              public preview for Windows and Linux.
+            </p>
+          </div>
+        </section>
+
+        <section className="mx-auto mb-14 max-w-4xl overflow-hidden rounded-3xl border border-emerald-400/25 bg-gradient-to-br from-emerald-500/[0.10] via-[#10121a] to-cyan-400/[0.06] p-6 sm:p-8">
+          <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-emerald-300">
+                Available now
+              </p>
+              <h3 className="mt-2 text-2xl font-black sm:text-3xl">
+                MediaForge Prompt Studio v0.3
+              </h3>
+              <p className="mt-3 max-w-2xl leading-7 text-gray-400">
+                Explore Prompt Doctor, Visual Proof and the Hero Frame workflow
+                locally while the product is in public testing.
+              </p>
             </div>
+            <Link
+              href={RELEASE_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-purple-500 to-cyan-400 px-6 text-sm font-bold text-[#08090f] transition hover:brightness-110"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Open v0.3 downloads
+            </Link>
+          </div>
+        </section>
+
+        <section className="pb-14 sm:pb-20">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-black sm:text-4xl">Future Plans</h2>
+            <p className="mt-4 leading-7 text-gray-400">
+              Commercial subscriptions remain disabled until their real features
+              and persistent entitlements are implemented.
+            </p>
           </div>
 
-          <Button
-            onClick={startChecklistPayment}
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-          >
-            Start Test-Pi Payment
-          </Button>
-        </div>
-
-        <div className="max-w-3xl mx-auto text-center mb-10">
-          <h2 className="text-3xl font-bold text-white mb-3">
-            Future Plans
-          </h2>
-
-          <p className="text-gray-400">
-            Commercial subscriptions remain disabled
-            until their real features and persistent
-            entitlements are implemented.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto opacity-70">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative p-6 rounded-lg border ${
-                plan.popular
-                  ? "bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/50"
-                  : "bg-gray-800/50 border-gray-700"
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-xs font-semibold text-white">
-                  Planned
-                </div>
-              )}
-
-              <div className="mb-6">
-                <h3 className="text-2xl font-bold text-white mb-2">
-                  {plan.name}
-                </h3>
-
-                <p className="text-gray-400 text-sm mb-4">
-                  {plan.description}
-                </p>
-
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-bold text-white">
-                    {plan.price}
-                  </span>
-
-                  <span className="text-xl text-purple-400">
-                    π
-                  </span>
-
-                  <span className="text-gray-400">
-                    /month
-                  </span>
-                </div>
-              </div>
-
-              <ul className="space-y-3 mb-6">
-                {plan.features.map((feature) => (
-                  <li
-                    key={feature}
-                    className="flex items-start gap-2 text-sm text-gray-300"
-                  >
-                    <span className="text-purple-400 mt-0.5">
-                      ✓
-                    </span>
-
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <Button
-                disabled
-                className="w-full bg-gray-700"
+          <div className="mx-auto mt-9 grid max-w-6xl gap-5 md:grid-cols-3">
+            {plans.map((plan) => (
+              <article
+                key={plan}
+                className="relative flex min-h-56 flex-col items-center justify-center overflow-hidden rounded-2xl border border-gray-800 bg-gray-900/60 p-7 text-center backdrop-blur"
               >
-                Coming later
-              </Button>
-            </div>
-          ))}
-        </div>
-      </div>
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-400/60 to-transparent" />
+                <span className="rounded-full border border-gray-700 bg-gray-950/70 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-gray-400">
+                  Planned
+                </span>
+                <h3 className="mt-5 text-3xl font-black">{plan}</h3>
+                <p className="mt-3 text-sm leading-6 text-gray-500">
+                  Features, availability and pricing will be announced after
+                  implementation and validation.
+                </p>
+              </article>
+            ))}
+          </div>
 
-      <PiPaymentModal
-        isOpen={isChecklistPaymentOpen}
-        onClose={() =>
-          setIsChecklistPaymentOpen(false)
-        }
-        productId="checklist_test"
-        amount={1}
-        planName="Checklist Test Payment"
-        planDescription="Developer Portal Testnet validation transaction"
-        onSuccess={(payment) => {
-          alert(
-            `Test-Pi payment completed successfully.\nPayment ID: ${payment.identifier}`
-          );
-        }}
-      />
-    </div>
+          <div className="mx-auto mt-7 max-w-6xl rounded-2xl border border-amber-300/25 bg-amber-300/[0.07] p-6 sm:flex sm:items-center sm:gap-5 sm:p-7">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-300/10 text-amber-200">
+              <Coins className="h-6 w-6" />
+            </div>
+            <div className="mt-4 sm:mt-0">
+              <h3 className="text-xl font-black text-amber-100">
+                Pi token payments are planned
+              </h3>
+              <p className="mt-2 leading-7 text-gray-400">
+                When commercial plans become available, payment with Pi tokens
+                is intended to be supported as part of the Director&apos;s Cut AI Pro ecosystem.
+                Final payment terms will be published only after the integration is implemented and validated.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <footer className="flex flex-col items-center justify-between gap-3 border-t border-gray-800 py-6 text-center text-sm text-gray-500 sm:flex-row sm:text-left">
+          <span>Director&apos;s Cut AI Pro · Future plans presented without unimplemented feature promises</span>
+          <Link href="/" className="font-semibold text-purple-300 transition hover:text-purple-200">
+            Return to home
+          </Link>
+        </footer>
+      </div>
+    </main>
   );
 }

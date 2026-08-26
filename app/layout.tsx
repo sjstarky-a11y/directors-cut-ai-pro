@@ -8,7 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Director's Cut AI Pro · MediaForge Prompt Studio",
   description:
-    "Download MediaForge Prompt Studio v0.2 for Windows or Linux: a private local AI workspace for stronger video prompts, fidelity protection and visual proof frames.",
+    "Download MediaForge Prompt Studio v0.3 for Windows or Linux: a private local AI workspace for stronger video prompts, fidelity protection, visual proof and selectable Hero Frames.",
   generator: "Director's Cut AI Pro",
   keywords: [
     "MediaForge Prompt Studio",
