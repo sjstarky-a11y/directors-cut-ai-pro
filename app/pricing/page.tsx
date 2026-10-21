@@ -4,22 +4,21 @@ import { PiLoginButton } from "@/components/pi-login-button";
 
 const plans = ["Basic", "Pro", "Enterprise"];
 
-const RELEASE_URL =
-  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/tag/v0.3";
+import { RELEASE_URL, RELEASE_LABEL, LICENSE_URL } from "@/lib/mediaforge-release";
 
 export default function PricingPage() {
   return (
     <main className="min-h-screen bg-[#07070d] text-white">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <header className="flex items-center justify-between gap-4 py-6">
+        <header className="flex flex-wrap items-center justify-between gap-4 py-6">
           <Link href="/" className="flex min-w-0 items-center gap-3">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 font-bold">
               DC
             </div>
             <div className="min-w-0">
-              <h1 className="truncate text-lg font-bold sm:text-2xl">
+              <p className="truncate text-lg font-bold sm:text-2xl">
                 Director&apos;s Cut AI Pro
-              </h1>
+              </p>
               <p className="hidden text-sm text-gray-400 sm:block">
                 AI video pre-production platform
               </p>
@@ -45,15 +44,15 @@ export default function PricingPage() {
               <Sparkles className="h-4 w-4" />
               Transparent public-preview roadmap
             </p>
-            <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
+            <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
               Use the public preview now.
               <span className="block bg-gradient-to-r from-purple-400 via-fuchsia-400 to-cyan-300 bg-clip-text text-transparent">
                 Future plans will come later.
               </span>
-            </h2>
+            </h1>
             <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-400 sm:text-xl sm:leading-8">
-              MediaForge Prompt Studio v0.3 is currently available as a free
-              public preview for Windows and Linux.
+              MediaForge Prompt Studio {RELEASE_LABEL} is available for personal,
+              non-commercial evaluation on Windows and Linux.
             </p>
           </div>
         </section>
@@ -65,11 +64,11 @@ export default function PricingPage() {
                 Available now
               </p>
               <h3 className="mt-2 text-2xl font-black sm:text-3xl">
-                MediaForge Prompt Studio v0.3
+                MediaForge Prompt Studio {RELEASE_LABEL}
               </h3>
               <p className="mt-3 max-w-2xl leading-7 text-gray-400">
                 Explore Prompt Doctor, Visual Proof and the Hero Frame workflow
-                locally while the product is in public testing.
+                locally while the product is in public testing. See the <Link href={LICENSE_URL} target="_blank" rel="noreferrer" className="text-purple-300 underline hover:text-purple-200">evaluation license</Link> for permitted use.
               </p>
             </div>
             <Link
@@ -79,7 +78,7 @@ export default function PricingPage() {
               className="inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-purple-500 to-cyan-400 px-6 text-sm font-bold text-[#08090f] transition hover:brightness-110"
             >
               <Download className="mr-2 h-4 w-4" />
-              Open v0.3 downloads
+              Open v0.4 downloads
             </Link>
           </div>
         </section>
