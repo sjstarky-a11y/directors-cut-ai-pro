@@ -17,16 +17,11 @@ import {
   WandSparkles,
 } from "lucide-react";
 
-const RELEASE_URL =
-  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/tag/v0.3";
-const WINDOWS_URL =
-  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.3/MediaForge-Prompt-Studio-v0.3-Windows-x64.zip";
-const LINUX_URL =
-  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.3/MediaForge-Prompt-Studio-v0.3-Linux-x86_64.tar.gz";
-const CHECKSUM_URL =
-  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.3/SHA256SUMS-v0.3.txt";
-const GITHUB_URL = "https://github.com/sjstarky-a11y/mediaforge-prompt-studio";
-const ISSUES_URL = `${GITHUB_URL}/issues`;
+import {
+  RELEASE_URL, WINDOWS_URL, LINUX_URL, CHECKSUM_URL,
+  ISSUES_URL, FEEDBACK_URL, QUICKSTART_URL, USER_GUIDE_URL, HELP_URL,
+  SUPPORT_URL, VALIDATION_URL, LICENSE_URL,
+} from "@/lib/mediaforge-release";
 
 export default function PromptDoctorPage() {
   return (
@@ -58,29 +53,30 @@ export default function PromptDoctorPage() {
           <div className="relative grid gap-8 lg:grid-cols-[0.87fr_1.13fr] lg:items-center">
             <div>
               <Link href={RELEASE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.08em] text-emerald-300 transition hover:bg-emerald-400/15">
-                <CheckCircle2 className="h-3.5 w-3.5" />v0.3 Public Preview
+                <CheckCircle2 className="h-3.5 w-3.5" />v0.4 Preview
               </Link>
               <h1 className="mt-5 text-4xl font-black leading-[0.98] tracking-tight sm:text-5xl lg:text-6xl">
                 Better AI video starts before generation.
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-gray-300 sm:text-lg">
-                MediaForge turns rough ideas into stronger prompts, protects creative intent, confirms the scene locally, and prepares approved wording for your AI video service. v0.3 adds a selectable three-image Hero Frame Set before image-to-video generation.
+                Prepare a prompt, review its meaning and preview the scene locally. v0.4 adds Intel GPU text and images alongside CPU and NVIDIA support.
               </p>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-7 flex flex-col flex-wrap gap-3 sm:flex-row">
                 <DownloadButton href={WINDOWS_URL} label="Download for Windows" />
                 <DownloadButton href={LINUX_URL} label="Download for Linux" secondary />
               </div>
               <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-gray-400 sm:text-sm">
                 <TrustItem text="Runs on your computer" />
-                <TrustItem text="CPU included · NVIDIA acceleration optional" />
+                <TrustItem text="CPU · NVIDIA · Intel" />
                 <TrustItem text="No cloud AI required" />
               </div>
             </div>
 
             <div className="overflow-hidden rounded-[24px] border border-[#3a3e49] bg-[#0d0f15] p-2 shadow-2xl">
               <div className="aspect-[1743/844] overflow-hidden rounded-[18px]">
-                <img src="/mediaforge-v02-workspace.webp" alt="MediaForge Prompt Studio v0.3 local workspace" className="h-full w-full object-cover object-bottom" />
+                <img src="/mediaforge-v02-workspace.webp" alt="MediaForge local workspace interface example" className="h-full w-full object-cover object-bottom" />
               </div>
+              <p className="px-3 py-2 text-xs leading-5 text-gray-500">Earlier interface example; current hardware support is listed below.</p>
             </div>
           </div>
         </section>
@@ -90,7 +86,7 @@ export default function PromptDoctorPage() {
             <p className="text-xs font-black uppercase tracking-[0.14em] text-purple-300">Why Prompt Doctor matters</p>
             <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">A powerful video model cannot rescue unclear direction.</h2>
             <p className="mt-4 text-sm leading-7 text-gray-400 sm:text-base">
-              AI video tools can be impressive, but vague prompts often change the subject, location, action or visual intention. Prompt Doctor strengthens the instruction before expensive generation begins — without silently replacing the creator&apos;s idea with its own.
+              Specify the subject, action, setting and camera direction. Prompt Doctor helps refine the wording; you review the result before generation. Fidelity Guard flags selected changes but cannot detect every error.
             </p>
           </article>
 
@@ -109,88 +105,98 @@ export default function PromptDoctorPage() {
         </section>
 
         <section className="mt-20 scroll-mt-6" id="workflow">
-          <SectionHeading eyebrow="One coherent workflow" title="Improve. Protect. Prove. Adapt." description="Four connected steps help creators move from a rough idea to a prompt they can use with confidence." />
+          <SectionHeading eyebrow="One coherent workflow" title="Improve. Protect. Prove. Adapt." description="Refine the idea, review the result, choose a frame and copy the approved prompt." />
           <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <InfoCard number="01" icon={<ScanSearch className="h-5 w-5" />} title="Improve" description="Prompt Doctor identifies ambiguity, missing direction and contradictions, then strengthens the wording." />
-            <InfoCard number="02" icon={<ShieldCheck className="h-5 w-5" />} title="Protect" description="Fidelity Guard checks whether the subject, action, setting and explicit constraints remain intact." />
-            <InfoCard number="03" icon={<Film className="h-5 w-5" />} title="Prove" description="Fast Proof creates a local SDXL still; Hero Frame Set creates three deeper FLUX candidates for creator selection." />
+            <InfoCard number="02" icon={<ShieldCheck className="h-5 w-5" />} title="Protect" description="Fidelity Guard flags selected changes to subjects, actions and constraints for your review." />
+            <InfoCard number="03" icon={<Film className="h-5 w-5" />} title="Prove" description="Fast/Quality Proof creates a still preview; optional Hero compares three candidates." />
             <InfoCard number="04" icon={<WandSparkles className="h-5 w-5" />} title="Adapt" description="Model Adapter prepares approved wording for Generic Video, Runway, Veo or Kling and explains any change." />
           </div>
         </section>
 
         <section className="mt-20 grid gap-6 md:grid-cols-2">
-          <ShowcaseCard image="/mediaforge-v02-proof-frame.webp" alt="A Visual Proof Frame generated locally in MediaForge" eyebrow="See the idea before video generation" title="Visual Proof & Hero Frame Set" description="Confirm the subject, location and visual direction before spending credits or time in an external video generator. Fast Proof supports quick scene approval; Hero Frame Set offers three local candidates with visible progress and creator selection." />
+          <ShowcaseCard image="/mediaforge-v02-proof-frame.webp" alt="A Visual Proof Frame generated locally in MediaForge" eyebrow="See the idea before video generation" title="Visual Proof & Hero Frame Set" description="Review a still preview or compare three Hero candidates. Select the frame that best fits your scene before continuing to video generation." />
           <ShowcaseCard image="/mediaforge-v02-model-adapter.webp" alt="MediaForge Model Adapter with a Generic Video target" eyebrow="No hidden rewrite" title="Transparent Model Adapter" description="If no model-specific change is needed, MediaForge says Compatible as-is. When wording changes, the reason is shown instead of hidden." />
         </section>
 
         <section className="mt-20 grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
-            <SectionHeading eyebrow="Simple by default" title="The user chooses the task. MediaForge handles the runtime." description="Hardware detection always provides a compatible CPU path and uses NVIDIA acceleration when suitable NVIDIA hardware is available. Backend and model details remain available in Developer settings without crowding the normal workflow." compact />
+            <SectionHeading eyebrow="Simple by default" title="The user chooses the task. MediaForge handles the runtime." description="Auto checks the available CPU, NVIDIA and Intel runtimes. Text and image services report their own device; CPU compatibility remains available." compact />
             <div className="mt-6 space-y-3">
-              <FeatureLine icon={<Cpu className="h-5 w-5" />} title="CPU compatible" text="OpenVINO image generation and llama.cpp Prompt Doctor provide a broad fallback path." />
-              <FeatureLine icon={<MonitorCog className="h-5 w-5" />} title="Optional NVIDIA acceleration" text="When an NVIDIA GPU is available, CUDA acceleration includes a tested low-memory mode for older 4 GB cards." />
+              <FeatureLine icon={<Cpu className="h-5 w-5" />} title="CPU compatible" text="A local fallback when no eligible GPU runtime is selected." />
+              <FeatureLine icon={<MonitorCog className="h-5 w-5" />} title="Optional NVIDIA acceleration" text="CUDA profiles adapt to available memory. Additional hardware validation remains open." />
+              <FeatureLine icon={<MonitorCog className="h-5 w-5" />} title="Intel text and images" text="Intel Arc Pro B60 verified on Windows/WSL2. Hero uses its separate CPU/NVIDIA service." />
               <FeatureLine icon={<ShieldCheck className="h-5 w-5" />} title="Local-first privacy" text="Prompts and proof frames are processed by services running on the user&apos;s computer." />
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-            <MetricCard value="58" label="automated checks in the v0.3 release gate" />
-            <MetricCard value="4 GB" label="GTX 1050 low-memory path validated end to end" />
-            <MetricCard value="3" label="real tested paths: Windows CPU, Windows NVIDIA and Ubuntu WSL2 CPU" />
+            <MetricCard value="93" label="application checks passed on Windows and Ubuntu" />
+            <MetricCard value="B60" label="Intel GPU text and Fast/Quality Proof verified on Windows/WSL2" />
+            <MetricCard value="Auto" label="runtime checks before selecting NVIDIA, Intel or CPU" />
           </div>
         </section>
 
         <section className="mt-20 scroll-mt-6" id="download">
           <SectionHeading eyebrow="Download & install" title="Choose your operating system. Keep the setup simple." description="Docker is the main prerequisite. MediaForge then detects compatible hardware and downloads the required local models." />
           <div className="mt-8 grid gap-5 lg:grid-cols-2">
-            <InstallCard title="Windows 10/11" badge="CPU included · NVIDIA optional" href={WINDOWS_URL} downloadLabel="Download Windows ZIP" steps={[
-              "Install and start Docker Desktop using Linux containers.",
+            <InstallCard title="Windows 11 x64" badge="CPU · NVIDIA · Intel" href={WINDOWS_URL} downloadLabel="Download Windows ZIP" steps={[
+              "Start Docker Desktop with WSL2; enable Model Runner and local TCP access.",
               "Extract the complete ZIP into a new folder.",
               "Read START-HERE-WINDOWS.txt and double-click MediaForge-Windows.cmd.",
-              "MediaForge always has a CPU-compatible path; compatible NVIDIA hardware can additionally use CUDA acceleration.",
+              "Allow first downloads to finish, then open http://127.0.0.1:18888.",
             ]} />
-            <InstallCard title="Linux x86_64" badge="CPU included · NVIDIA optional" href={LINUX_URL} downloadLabel="Download Linux archive" steps={[
-              "Install Docker Engine with the Compose plugin.",
+            <InstallCard title="Ubuntu 24.04 x86_64" badge="Hardware validation pending" href={LINUX_URL} downloadLabel="Download Linux archive" steps={[
+              "Install Docker Engine, Compose and Model Runner; add GPU drivers if needed.",
               "Extract the .tar.gz archive into a new folder.",
               "Read START-HERE-LINUX.txt and run ./MediaForge-Linux.sh.",
-              "MediaForge starts the compatible CPU runtime; eligible NVIDIA hardware can additionally use the CUDA path.",
+              "Allow first downloads to finish, then open http://127.0.0.1:18888.",
             ]} />
           </div>
           <div className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/10 p-5">
             <div className="flex gap-3">
               <HardDriveDownload className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" />
               <div>
-                <h3 className="font-bold text-amber-100">Local image models download on first use</h3>
-                <p className="mt-1 text-sm leading-6 text-amber-100/70">The first Visual Proof model download is several gigabytes. Hero Frame Set asks for confirmation before its separate FLUX model download of approximately 12 GB. Prompt Doctor remains usable while models prepare, and future starts reuse the local cache.</p>
+                <h3 className="font-bold text-amber-100">Models download separately</h3>
+                <p className="mt-1 text-sm leading-6 text-amber-100/70">Setup downloads several gigabytes; Intel text adds about 4.5 GB. Optional Hero asks before its separate ~12 GB download. Downloads are cached locally. Use the launcher Stop action when finished; closing the browser leaves services running.</p>
               </div>
             </div>
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            <ResourceLink href={QUICKSTART_URL} label="Installation guide" />
+            <ResourceLink href={USER_GUIDE_URL} label="Using the app" />
+            <ResourceLink href={HELP_URL} label="Help, stop & memory" />
           </div>
         </section>
 
         <section className="mt-20 grid gap-5 lg:grid-cols-3">
           <DetailCard icon={<ShieldCheck className="h-6 w-6" />} title="Private by design" text="The full AI workflow runs through local services. Models are downloaded to the computer and are not bundled in the small release archive." />
-          <DetailCard icon={<Terminal className="h-6 w-6" />} title="Public preview" text="Windows CPU/OpenVINO, Windows NVIDIA CUDA low-memory, Ubuntu 24.04 WSL2 CPU/OpenVINO, and the v0.3 Hero Frame workflow have completed real validation." />
-          <DetailCard icon={<MonitorCog className="h-6 w-6" />} title="Current scope" text="Native Linux NVIDIA support is included but still needs broader hardware validation. macOS support is planned for a later milestone." />
+          <DetailCard icon={<Terminal className="h-6 w-6" />} title="Public preview" text="Intel B60 text and image execution passed Windows/WSL2 tests. Native Linux GPU installation still needs hardware validation." />
+          <DetailCard icon={<MonitorCog className="h-6 w-6" />} title="Current scope" text="Croatian text can contain grammar and meaning errors. Review text and images manually. No macOS package is included." />
         </section>
 
         <section className="mt-20 scroll-mt-6" id="faq">
           <SectionHeading eyebrow="Questions before downloading" title="What users should know" description="Clear expectations are part of a trustworthy local AI product." />
           <div className="mx-auto mt-8 max-w-4xl space-y-3">
             <FaqItem question="Is the website the same as the MediaForge application?" answer="No. This website explains the product and provides verified downloads. The full Prompt Doctor, Fidelity Guard, Visual Proof Frame and Model Adapter run in the downloaded local workspace." />
-            <FaqItem question="Does MediaForge send my prompts to a cloud AI provider?" answer="The MediaForge v0.3 workflow uses local model services on your computer. Internet access is needed for the initial software and model downloads, but the core inference workflow is local." />
-            <FaqItem question="Do I need to choose AI models or CUDA settings?" answer="Normally, no. MediaForge selects a compatible CPU runtime automatically and uses NVIDIA acceleration only when compatible NVIDIA hardware is available. Technical model and runtime controls are available only when Developer settings are opened." />
+            <FaqItem question="Does MediaForge send my prompts to a cloud AI provider?" answer="Core text and image inference runs on your computer. Internet is needed for software and model downloads; external video services have their own policies." />
+            <FaqItem question="Do I need to choose AI models or CUDA settings?" answer="Auto selects an eligible NVIDIA or Intel runtime, with CPU fallback. Intel text needs an eligible Intel profile with at least 16 GiB of reported GPU memory. While it prepares, the result reports the local Model Runner fallback." />
             <FaqItem question="Why is the release archive small if the application uses large AI models?" answer="The models are not bundled. They are downloaded locally during setup, which keeps the release archive small and lets future versions manage compatible runtimes independently." />
-            <FaqItem question="What is Hero Frame Set?" answer="Hero Frame Set creates three local FLUX image candidates from the approved scene direction. MediaForge shows preparation and frame-by-frame progress, restores an active job after refresh, and lets the creator safely stop remaining frames after the current frame finishes." />
-            <FaqItem question="Is v0.3 production-ready?" answer="It is a public pre-release intended for testing and feedback. Windows and WSL2 paths have completed real validation; broader native Linux hardware coverage is still growing." />
+            <FaqItem question="What is Hero Frame Set?" answer="Three local image candidates for creator selection, with progress and a stop-after-current-frame control. Hero uses its separate CPU/NVIDIA service." />
+            <FaqItem question="Is v0.4 production-ready?" answer="This is a preview for evaluation and feedback. GPU execution and content quality are separate: the model can run correctly and still produce an inaccurate answer or image." />
+            <FaqItem question="Does the app generate video?" answer="It prepares prompts and still-image previews. Use your approved prompt and frame in a separate video generator." />
+            <FaqItem question="Why can RAM stay high after stopping?" answer="Docker/WSL can retain memory and file cache. Stored Docker images use disk space; they do not prove a model is still loaded. See the memory help guide before stopping shared services." />
           </div>
         </section>
 
         <section className="mt-20 rounded-[24px] border border-[#2b2f39] bg-[#12141b] p-6 sm:p-8">
           <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-            <SectionHeading eyebrow="Open development" title="Verify the release. Follow progress. Share feedback." description="Use the checksum before installation, review the current release notes, or report a reproducible issue through GitHub." compact />
-            <div className="grid min-w-[280px] gap-3 sm:grid-cols-2 lg:min-w-[520px]">
-              <ResourceLink href={RELEASE_URL} label="v0.3 release" />
+            <SectionHeading eyebrow="Release & support" title="Verify the release. Follow progress. Share feedback." description="Use the checksum before installation, review the current release notes, or report a reproducible issue through GitHub." compact />
+            <div className="grid min-w-0 gap-3 sm:grid-cols-2 lg:min-w-[520px]">
+              <ResourceLink href={RELEASE_URL} label="v0.4 preview release" />
               <ResourceLink href={CHECKSUM_URL} label="SHA-256 checksums" />
-              <ResourceLink href={GITHUB_URL} label="GitHub repository" />
+              <ResourceLink href={FEEDBACK_URL} label="Known limits & feedback" />
+              <ResourceLink href={SUPPORT_URL} label="Supported platforms" />
+              <ResourceLink href={VALIDATION_URL} label="Intel test results" />
               <ResourceLink href={ISSUES_URL} label="Report an issue" />
             </div>
           </div>
@@ -200,7 +206,7 @@ export default function PromptDoctorPage() {
           <Sparkles className="mx-auto h-8 w-8 text-purple-300" />
           <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Your idea deserves better than a guess.</h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-gray-300 sm:text-base">Improve the prompt, protect the intention, confirm the scene and then move to video generation.</p>
-          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+          <div className="mt-7 flex flex-col flex-wrap justify-center gap-3 sm:flex-row">
             <DownloadButton href={WINDOWS_URL} label="Download for Windows" />
             <DownloadButton href={LINUX_URL} label="Download for Linux" secondary />
             <Link href={RELEASE_URL} target="_blank" rel="noreferrer" className="inline-flex h-11 items-center justify-center rounded-xl border border-[#3a3e49] bg-[#15171e] px-5 text-sm font-bold text-gray-100 transition hover:bg-[#1d2028]">
@@ -210,7 +216,8 @@ export default function PromptDoctorPage() {
         </section>
 
         <footer className="border-t border-[#252933] py-7 text-center text-xs leading-5 text-gray-500">
-          Director&apos;s Cut AI Pro · MediaForge Prompt Studio v0.3 Public Preview<br />Local-first tools for cinematic AI video creation
+          Director&apos;s Cut AI Pro · MediaForge Prompt Studio v0.4 Preview<br />
+          Personal, non-commercial evaluation · <Link href={LICENSE_URL} target="_blank" rel="noreferrer" className="text-gray-400 underline hover:text-white">License</Link>
         </footer>
       </div>
     </main>
