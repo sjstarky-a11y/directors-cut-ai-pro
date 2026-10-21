@@ -15,23 +15,19 @@ import {
 } from "lucide-react";
 import { PiLoginButton } from "@/components/pi-login-button";
 
-const RELEASE_URL =
-  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/tag/v0.3";
-const WINDOWS_URL =
-  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.3/MediaForge-Prompt-Studio-v0.3-Windows-x64.zip";
-const LINUX_URL =
-  "https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/download/v0.3/MediaForge-Prompt-Studio-v0.3-Linux-x86_64.tar.gz";
+import { RELEASE_URL, WINDOWS_URL, LINUX_URL, QUICKSTART_URL, SUPPORT_URL } from "@/lib/mediaforge-release";
+
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#07070d] text-white">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <header className="flex items-center justify-between py-6">
+        <header className="flex flex-wrap items-center justify-between gap-4 py-6">
           <Link href="/" className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 font-bold">
               DC
             </div>
             <div>
-              <h1 className="text-xl font-bold sm:text-2xl">Director&apos;s Cut AI Pro</h1>
+              <p className="text-xl font-bold sm:text-2xl">Director&apos;s Cut AI Pro</p>
               <p className="text-sm text-gray-400">AI video pre-production platform</p>
             </div>
           </Link>
@@ -56,29 +52,28 @@ export default function HomePage() {
               className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-200 transition hover:bg-emerald-500/15"
             >
               <Sparkles className="h-4 w-4" />
-              MediaForge Prompt Studio v0.3 Public Preview
+              MediaForge Prompt Studio v0.4 Preview
             </Link>
 
-            <h2 className="text-4xl font-bold leading-tight sm:text-6xl lg:text-7xl">
+            <h1 className="text-4xl font-bold leading-tight sm:text-6xl lg:text-7xl">
               Turn rough ideas into
               <span className="block bg-gradient-to-r from-purple-400 via-fuchsia-400 to-cyan-300 bg-clip-text text-transparent">
                 stronger AI video prompts.
               </span>
-            </h2>
+            </h1>
 
             <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-400 sm:text-xl sm:leading-8">
-              Diagnose weak prompts, protect creative intent, confirm the scene
-              with a local proof frame, and prepare the final prompt for your AI
-              video service — on your own computer.
+              Refine the prompt, review changes to your idea, preview the scene,
+              and prepare it for your video workflow — on your own computer.
             </p>
 
-            <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+            <div className="mt-9 flex flex-col flex-wrap justify-center gap-3 sm:flex-row">
               <Link
                 href="/prompt-doctor"
                 className="inline-flex h-12 items-center justify-center rounded-md bg-gradient-to-r from-purple-600 to-cyan-500 px-7 text-base font-semibold text-[#090a0f] transition hover:brightness-110"
               >
                 <Sparkles className="mr-2 h-5 w-5" />
-                Explore MediaForge v0.3
+                Explore MediaForge v0.4
               </Link>
               <Link
                 href={WINDOWS_URL}
@@ -101,7 +96,7 @@ export default function HomePage() {
             </div>
 
             <p className="mx-auto mt-4 max-w-4xl text-sm leading-6 text-emerald-300/80">
-              Windows and Linux packages · CPU runtime included · Optional NVIDIA acceleration · Local processing through Docker
+              Windows & Linux · CPU, NVIDIA & Intel · Local processing through Docker
             </p>
           </div>
         </section>
@@ -109,9 +104,9 @@ export default function HomePage() {
         <section className="grid gap-5 pb-12 md:grid-cols-3">
           <FeatureCard
             icon={<Sparkles className="h-6 w-6" />}
-            badge="Available · v0.3"
+            badge="Available · v0.4"
             title="MediaForge Prompt Studio"
-            description="The complete local workspace: Prompt Doctor, Fidelity Guard, Visual Proof, Hero Frame Set, and transparent model adaptation for AI video services."
+            description="Refine prompts, review intent, generate still-image previews and adapt approved wording for video tools."
             href="/prompt-doctor"
             linkLabel="Features, instructions & downloads"
           />
@@ -136,10 +131,10 @@ export default function HomePage() {
             <p className="text-xs font-black uppercase tracking-[0.14em] text-emerald-300">Real workflow examples</p>
             <h3 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">From one prompt to a chosen Hero Frame.</h3>
             <p className="mx-auto mt-4 max-w-3xl text-sm leading-7 text-gray-400 sm:text-base">
-              These locally generated frame options preserve the core scene while exploring composition, pose and atmosphere. The creator selects the image that best represents the intended video scene.
+              Compare three locally generated candidates and choose the image that best fits your intended scene. Review every result for unwanted changes.
             </p>
             <p className="mt-4 inline-flex rounded-full border border-amber-300/25 bg-amber-300/10 px-3 py-1.5 text-xs font-medium text-amber-100/80">
-              Included in v0.3 Public Preview · Three local Hero Frame candidates, visible progress, creator selection and safe stop-after-current-frame control.
+              Optional Hero workflow · Separate CPU/NVIDIA service
             </p>
           </div>
 
@@ -170,7 +165,7 @@ export default function HomePage() {
 
           <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border border-gray-800 bg-black/20 p-5 text-center sm:flex-row sm:text-left">
             <p className="max-w-3xl text-sm leading-6 text-gray-400">
-              <span className="font-bold text-gray-200">Why three options?</span> Hero Frame Set gives the creator a controlled visual comparison before committing to image-to-video generation. The scene stays anchored while composition, pose and atmosphere can vary.
+              <span className="font-bold text-gray-200">Why three options?</span> Compare composition and detail before using a frame in a separate video generator. Results can vary from the prompt.
             </p>
             <Link href="/prompt-doctor" className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-purple-300 transition hover:text-purple-200">
               See the full MediaForge workflow <ArrowRight className="h-4 w-4" />
@@ -191,16 +186,20 @@ export default function HomePage() {
                 </div>
               </div>
               <p className="mt-5 max-w-4xl leading-7 text-gray-400">
-                MediaForge runs its AI workflow locally through Docker Model
-                Runner and a local image service. It automatically chooses a
-                compatible CPU runtime, with optional NVIDIA acceleration when available, while advanced model choices stay
-                out of the way unless the user opens Developer settings.
+                MediaForge checks the available CPU, NVIDIA and Intel runtimes.
+                Intel Arc Pro B60 text and image execution is verified on Windows/WSL2.
+                Native Linux GPU setup still needs hardware validation.
               </p>
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 <StatusItem icon={<Cpu className="h-4 w-4" />} text="CPU fallback included" />
-                <StatusItem icon={<MonitorCog className="h-4 w-4" />} text="Optional NVIDIA low-memory mode" />
-                <StatusItem icon={<CheckCircle2 className="h-4 w-4" />} text="58 automated checks" />
+                <StatusItem icon={<MonitorCog className="h-4 w-4" />} text="Intel B60 text + images" />
+                <StatusItem icon={<CheckCircle2 className="h-4 w-4" />} text="93 application checks passed" />
               </div>
+              <div className="mt-5 flex flex-wrap gap-5 text-sm font-semibold text-purple-300">
+                <Link href={QUICKSTART_URL} target="_blank" rel="noreferrer" className="hover:text-purple-200">Installation guide</Link>
+                <Link href={SUPPORT_URL} target="_blank" rel="noreferrer" className="hover:text-purple-200">Hardware support &amp; limits</Link>
+              </div>
+              <p className="mt-4 text-sm leading-6 text-gray-400">Croatian output needs manual review. No macOS package is included in this preview.</p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
               <Link
@@ -264,7 +263,7 @@ function WorkflowExample({ title, originalPrompt, refinedPrompt, frames, selecte
           <p className="mt-1 text-sm leading-6 text-gray-300">{originalPrompt}</p>
         </div>
         <div className="border-t border-gray-800 pt-3">
-          <p className="text-[11px] font-black uppercase tracking-[0.12em] text-emerald-300">02 · Prompt Doctor · Intent protected</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.12em] text-emerald-300">02 · Reviewed prompt</p>
           <p className="mt-1 text-sm leading-6 text-gray-300">{refinedPrompt}</p>
         </div>
       </div>

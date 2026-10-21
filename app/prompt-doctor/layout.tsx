@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import { RELEASE_DESCRIPTION } from "@/lib/mediaforge-release";
+
 export const metadata: Metadata = {
-  title: "MediaForge Prompt Studio v0.3 · Download & Hero Frame Preview",
-  description:
-    "Try Prompt Doctor in your browser or download MediaForge Prompt Studio v0.3 for Windows and Linux. Local AI, Fidelity Guard, Visual Proof, Hero Frame Set and Model Adapter.",
-  keywords: [
-    "MediaForge Prompt Studio",
-    "Prompt Doctor",
-    "AI video prompt generator",
-    "local AI video tools",
-    "Windows AI tools",
-    "Linux AI tools",
-  ],
+  title: "MediaForge Prompt Studio v0.4 · Windows, Linux & Intel GPU",
+  description: RELEASE_DESCRIPTION,
+  alternates: { canonical: "/prompt-doctor" },
+  openGraph: {
+    title: "MediaForge Prompt Studio v0.4 Preview",
+    description: RELEASE_DESCRIPTION,
+    url: "/prompt-doctor",
+    type: "website",
+    images: [{ url: "/mediaforge-v02-workspace.webp", alt: "MediaForge workspace interface example" }],
+  },
 };
 
 export default function PromptDoctorLayout({
