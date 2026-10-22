@@ -5,6 +5,7 @@ Public website for MediaForge Prompt Studio, built with Next.js, React and Tailw
 ## Live pages
 
 - [Home](https://directors-cut-ai-pro.vercel.app/)
+- [Custom AI video: selected work and enquiries](https://directors-cut-ai-pro.vercel.app/editor)
 - [MediaForge: workflow, setup and downloads](https://directors-cut-ai-pro.vercel.app/prompt-doctor)
 - [v0.4 preview release](https://github.com/sjstarky-a11y/mediaforge-prompt-studio/releases/tag/v0.4-preview)
 - [Current application guides](https://github.com/sjstarky-a11y/mediaforge-prompt-studio/tree/main/docs)
@@ -19,6 +20,19 @@ Hero uses a separate CPU/NVIDIA service. This preview has no macOS package.
 The website provides product information and downloads. AI inference runs in the
 separate local application. Public release URLs are centralized in
 `lib/mediaforge-release.ts`; no private model configurations belong on this website.
+
+## Video studio
+
+The `/editor` page presents custom AI video services and three approved studio
+examples. Enquiries open the visitor's email app; no enquiry is submitted by the
+website. The optional Scene & Shot Planner remains available at the bottom.
+Contact links are centralized in `lib/video-studio.ts`.
+
+Public clips and posters live in `public/video-studio/`. Use neutral filenames,
+H.264/AAC MP4 with fast-start playback, and WebP posters. Export clean media without
+source prompts, generation metadata or private workflow details. Never commit
+source job files. Keep playback user-initiated and update the visible descriptions
+when replacing clips. These are studio explorations, not client testimonials.
 
 ## Development and deployment
 

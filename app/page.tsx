@@ -112,11 +112,11 @@ export default function HomePage() {
           />
           <FeatureCard
             icon={<Clapperboard className="h-6 w-6" />}
-            badge="Preview"
-            title="Scene & Shot Planner"
-            description="Explore the visual timeline and prepare the foundation for editable scenes, shot order, duration and production notes."
+            badge="Studio · Selected work"
+            title="Custom AI Video"
+            description="See real AI video examples and discuss a scene made around your brief, with creative direction, motion and sound."
             href="/editor"
-            linkLabel="Open preview"
+            linkLabel="Explore the video studio"
           />
           <FeatureCard
             icon={<Film className="h-6 w-6" />}
