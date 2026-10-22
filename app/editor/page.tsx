@@ -1,559 +1,150 @@
-"use client";
-
-import { useEffect, useMemo, useState } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowDown,
-  ArrowLeft,
-  ArrowUp,
-  Clapperboard,
-  Copy,
-  Download,
-  Plus,
-  Save,
-  Trash2,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowDown, ArrowRight, Camera, Film, Mail, Volume2 } from "lucide-react";
+import SceneShotPlanner from "@/components/scene-shot-planner";
+import { VIDEO_ENQUIRY_URL } from "@/lib/video-studio";
 
-type Scene = {
-  id: string;
-  title: string;
-  duration: number;
-  description: string;
-  camera: string;
-  lighting: string;
-  notes: string;
+export const metadata: Metadata = {
+  title: "Custom AI Video Production | Director's Cut AI Pro",
+  description: "Custom AI video shaped around your brief. Explore real studio examples, then discuss your scene, camera direction, atmosphere and sound with us.",
+  alternates: { canonical: "https://directors-cut-ai-pro.vercel.app/editor" },
+  keywords: ["custom AI video", "AI video production", "creative studio", "Director's Cut AI Pro"],
+  twitter: {
+    card: "summary_large_image",
+    title: "Your idea. Made into a film.",
+    description: "Explore our AI video work and tell us what you want to create.",
+    images: ["https://directors-cut-ai-pro.vercel.app/video-studio/compass.webp"],
+  },
+  openGraph: {
+    title: "Your idea. Made into a film.",
+    description: "Explore our AI video work and tell us what you want to create.",
+    url: "https://directors-cut-ai-pro.vercel.app/editor",
+    images: [{ url: "https://directors-cut-ai-pro.vercel.app/video-studio/compass.webp", width: 848, height: 480, alt: "A brass compass in warm window light" }],
+  },
 };
 
-const STORAGE_KEY = "directors-cut-scene-planner";
-
-const initialScenes: Scene[] = [
+const examples = [
   {
-    id: "scene-1",
-    title: "Opening Shot",
-    duration: 4,
-    description: "Introduce the location and establish the visual atmosphere.",
-    camera: "Wide establishing shot with a slow push-in.",
-    lighting: "Soft directional light with natural contrast.",
-    notes: "Keep the main subject clearly visible.",
+    slug: "compass", number: "01", category: "DETAIL & STORY", title: "A small gesture. A cinematic moment.",
+    description: "A hand closes a brass compass on a sunlit wooden table. A simple action becomes a quiet story through texture, light and framing.",
+    direction: "Warm window light, an intimate close-up and one deliberate movement.",
+    notice: "The interaction with the object and the atmosphere of the scene.",
+    duration: "5 seconds", audio: false, width: 848, height: 480,
   },
   {
-    id: "scene-2",
-    title: "Main Action",
-    duration: 6,
-    description: "Show the central action and the subject interacting with the environment.",
-    camera: "Medium tracking shot at eye level.",
-    lighting: "Match the light direction from the opening shot.",
-    notes: "Preserve wardrobe, props and screen direction.",
+    slug: "matchday", number: "02", category: "CROWD & ATMOSPHERE", title: "The energy of matchday.",
+    description: "Green and white flags rise above a packed football terrace. Crowd movement and stadium light give this short scene a sense of scale.",
+    direction: "A lively stadium moment with waving flags and an energetic crowd.",
+    notice: "Movement across the frame and the feeling of being in the stands.",
+    duration: "4 seconds", audio: true, width: 864, height: 480,
+  },
+  {
+    slug: "flags", number: "03", category: "MOTION & IDENTITY", title: "A scene with its own identity.",
+    description: "Flags fill the foreground as supporters celebrate behind them. Sunlight and drifting green smoke build a distinctive matchday mood.",
+    direction: "Bring the flags forward and build the scene around colour, rhythm and celebration.",
+    notice: "Fabric in motion, layered depth and the atmosphere around the supporters.",
+    duration: "5 seconds", audio: true, width: 864, height: 480,
   },
 ];
 
-export default function EditorPage() {
-  const [projectTitle, setProjectTitle] = useState("Untitled Video Plan");
-  const [scenes, setScenes] = useState<Scene[]>(initialScenes);
-  const [status, setStatus] = useState("");
+const capabilities = [
+  { icon: Film, title: "Start with your idea", text: "Bring a written brief, a reference image or a scene you have in mind. We help turn it into a clear visual direction." },
+  { icon: Camera, title: "Direct the scene", text: "Agree the subject, action, camera movement, lighting and mood. Build a single moment or plan a sequence of shots." },
+  { icon: Volume2, title: "Shape the sound", text: "Discuss ambience, sound effects and spoken lines where the scene calls for them. Sound and delivery are agreed for each project." },
+];
 
-  useEffect(() => {
-    const imported = localStorage.getItem(
-      "directors-cut-scene-planner-import"
-    );
-
-    if (!imported) {
-      return;
-    }
-
-    try {
-      const parsed = JSON.parse(imported) as {
-        projectTitle?: string;
-        scenes?: Scene[];
-      };
-
-      if (parsed.projectTitle) {
-        setProjectTitle(parsed.projectTitle);
-      }
-
-      if (Array.isArray(parsed.scenes) && parsed.scenes.length > 0) {
-        setScenes(parsed.scenes);
-        setStatus("Shot plan imported from Prompt Doctor.");
-      }
-
-      localStorage.removeItem(
-        "directors-cut-scene-planner-import"
-      );
-    } catch {
-      setStatus("Unable to import the shot plan.");
-    }
-  }, []);
-
-  const totalDuration = useMemo(
-    () => scenes.reduce((sum, scene) => sum + scene.duration, 0),
-    [scenes]
-  );
-
-  const updateScene = (
-    id: string,
-    field: keyof Scene,
-    value: string | number
-  ) => {
-    setScenes((current) =>
-      current.map((scene) =>
-        scene.id === id ? { ...scene, [field]: value } : scene
-      )
-    );
-  };
-
-  const addScene = () => {
-    const nextNumber = scenes.length + 1;
-
-    setScenes((current) => [
-      ...current,
-      {
-        id: `scene-${Date.now()}`,
-        title: `Scene ${nextNumber}`,
-        duration: 5,
-        description: "",
-        camera: "",
-        lighting: "",
-        notes: "",
-      },
-    ]);
-  };
-
-  const deleteScene = (id: string) => {
-    setScenes((current) => current.filter((scene) => scene.id !== id));
-  };
-
-  const moveScene = (index: number, direction: -1 | 1) => {
-    const target = index + direction;
-
-    if (target < 0 || target >= scenes.length) {
-      return;
-    }
-
-    const reordered = [...scenes];
-    [reordered[index], reordered[target]] = [
-      reordered[target],
-      reordered[index],
-    ];
-
-    setScenes(reordered);
-  };
-
-  const showStatus = (message: string) => {
-    setStatus(message);
-    window.setTimeout(() => setStatus(""), 2200);
-  };
-
-  const saveProject = () => {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        projectTitle,
-        scenes,
-        savedAt: new Date().toISOString(),
-      })
-    );
-
-    showStatus("Project saved locally.");
-  };
-
-  const copyPlan = async () => {
-    await navigator.clipboard.writeText(buildTextPlan());
-    showStatus("Shot plan copied.");
-  };
-
-  const downloadFile = (
-    filename: string,
-    content: string,
-    type: string
-  ) => {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-
-    anchor.href = url;
-    anchor.download = filename;
-    anchor.click();
-
-    URL.revokeObjectURL(url);
-  };
-
-  const buildTextPlan = () => {
-    const sceneText = scenes
-      .map(
-        (scene, index) => `SCENE ${index + 1}: ${scene.title}
-Duration: ${scene.duration}s
-Description: ${scene.description || "-"}
-Camera: ${scene.camera || "-"}
-Lighting: ${scene.lighting || "-"}
-Notes: ${scene.notes || "-"}`
-      )
-      .join("\n\n");
-
-    return `DIRECTOR'S CUT AI PRO — SCENE PLAN
-
-Project: ${projectTitle}
-Total duration: ${totalDuration}s
-Scenes: ${scenes.length}
-
-${sceneText}`;
-  };
-
-  const exportText = () => {
-    downloadFile(
-      `scene-plan-${Date.now()}.txt`,
-      buildTextPlan(),
-      "text/plain;charset=utf-8"
-    );
-
-    showStatus("TXT exported.");
-  };
-
-  const exportJson = () => {
-    downloadFile(
-      `scene-plan-${Date.now()}.json`,
-      JSON.stringify(
-        {
-          app: "Director's Cut AI Pro",
-          projectTitle,
-          totalDuration,
-          scenes,
-          createdAt: new Date().toISOString(),
-        },
-        null,
-        2
-      ),
-      "application/json;charset=utf-8"
-    );
-
-    showStatus("JSON exported.");
-  };
-
+export default function VideoStudioPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-950 via-purple-950 to-gray-950 text-white">
-      <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
-        <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-700 bg-gray-900 text-gray-300 hover:bg-gray-800"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-
-            <div>
-              <h1 className="text-xl font-bold sm:text-2xl">
-                Scene & Shot Planner
-              </h1>
-              <p className="text-sm text-gray-400">
-                Build an editable production plan.
-              </p>
+    <main id="top" className="min-h-screen bg-[#080a0c] text-white selection:bg-lime-300 selection:text-black">
+      <a href="#work" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-white focus:p-4 focus:text-black">Skip to video examples</a>
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <header className="flex flex-wrap items-center justify-between gap-5 border-b border-white/10 py-6">
+          <Link href="/" className="text-sm font-bold tracking-tight">DIRECTOR&apos;S CUT <span className="text-lime-200">AI PRO</span></Link>
+          <nav aria-label="Video studio navigation" className="flex items-center gap-5 text-sm text-gray-300 sm:gap-8">
+            <a href="#work" className="hover:text-lime-200">Selected work</a>
+            <a href="#process" className="hover:text-lime-200">Process</a>
+            <a href={VIDEO_ENQUIRY_URL} className="inline-flex items-center gap-2 font-semibold text-lime-200">Let&apos;s talk <ArrowRight className="h-4 w-4" aria-hidden="true" /></a>
+          </nav>
+        </header>
+        <section className="grid gap-10 pb-14 pt-16 sm:pt-24 lg:grid-cols-[1.25fr_1fr] lg:items-end lg:gap-16">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-lime-200">Independent studio · Custom AI video</p>
+            <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[1.04] tracking-[-0.05em] sm:text-7xl lg:text-8xl">Your idea.<br /><span className="text-gray-400">Made into</span><br />a film.</h1>
+          </div>
+          <div className="max-w-lg lg:pb-2">
+            <p className="text-lg leading-8 text-gray-300 sm:text-xl">A product moment. A story worth telling. The atmosphere you want people to feel.</p>
+            <p className="mt-4 leading-7 text-gray-400">We create AI video around your brief — from the first visual direction to motion, sound and the final edit.</p>
+            <div className="mt-7 flex flex-wrap items-center gap-5">
+              <a href={VIDEO_ENQUIRY_URL} className="inline-flex min-h-12 items-center gap-3 rounded-full bg-lime-200 px-6 font-semibold text-[#10130c] transition hover:bg-lime-100">Tell us your idea <ArrowRight className="h-4 w-4" aria-hidden="true" /></a>
+              <a href="#work" className="inline-flex min-h-12 items-center gap-2 text-sm font-medium text-white hover:text-lime-200">Explore the work <ArrowDown className="h-4 w-4" aria-hidden="true" /></a>
             </div>
           </div>
-
-          <Button
-            onClick={saveProject}
-            className="bg-gradient-to-r from-purple-600 to-pink-600"
-          >
-            <Save className="mr-2 h-4 w-4" />
-            Save
-          </Button>
-        </header>
-
-        <section className="mb-6 rounded-2xl border border-gray-800 bg-gray-900/70 p-4 sm:p-6">
-          <label className="block text-sm font-medium text-gray-300">
-            Project title
-          </label>
-
-          <input
-            value={projectTitle}
-            onChange={(event) => setProjectTitle(event.target.value)}
-            className="mt-2 w-full rounded-xl border border-gray-700 bg-gray-950 px-4 py-3 text-lg font-semibold outline-none focus:border-purple-500"
-          />
-
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <SummaryCard label="Scenes" value={`${scenes.length}`} />
-            <SummaryCard label="Duration" value={`${totalDuration}s`} />
-            <SummaryCard
-              label="Status"
-              value={status || "Ready"}
-              fullWidth
-            />
+        </section>
+        <section id="work" aria-labelledby="work-title" className="scroll-mt-8 pb-20">
+          <div className="mb-7 flex flex-wrap items-end justify-between gap-3 border-t border-white/10 pt-7">
+            <h2 id="work-title" className="text-sm font-semibold uppercase tracking-[0.18em]">Selected work</h2>
+            <p className="text-sm text-gray-400">Real studio examples · AI-generated video</p>
+          </div>
+          <div className="space-y-12 sm:space-y-16">
+            {examples.map((example) => (
+              <article key={example.slug} className="grid gap-6 lg:grid-cols-[1.65fr_1fr] lg:items-center lg:gap-10">
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#141719]">
+                  <video controls playsInline preload="none" poster={`/video-studio/${example.slug}.webp`} width={example.width} height={example.height} aria-label={example.title} aria-describedby={`${example.slug}-description`} className="block h-auto w-full">
+                    <source src={`/video-studio/${example.slug}.mp4`} type="video/mp4" />
+                    Your browser does not support video playback. <a href={`/video-studio/${example.slug}.mp4`}>Open the video</a>.
+                  </video>
+                  <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-xs text-gray-400"><span>{example.duration} · {example.audio ? "Audio included" : "Silent scene"}</span><a href={`/video-studio/${example.slug}.mp4`} className="text-gray-300 underline decoration-gray-600 underline-offset-4 hover:text-lime-200">Open video</a></div>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-[0.15em] text-lime-200"><span className="mr-3 text-gray-500">{example.number}</span>{example.category}</p>
+                  <h3 className="mt-4 max-w-md text-3xl font-medium leading-tight tracking-tight sm:text-4xl">{example.title}</h3>
+                  <p id={`${example.slug}-description`} className="mt-4 leading-7 text-gray-400">{example.description}</p>
+                  <dl className="mt-6 space-y-4 border-t border-white/10 pt-5 text-sm leading-6">
+                    <div><dt className="font-medium text-gray-200">Creative direction</dt><dd className="mt-1 text-gray-400">{example.direction}</dd></div>
+                    <div><dt className="font-medium text-gray-200">What to notice</dt><dd className="mt-1 text-gray-400">{example.notice}</dd></div>
+                  </dl>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p className="mt-8 text-sm leading-6 text-gray-500">These short examples show our studio explorations. Your project&apos;s length, format and sound are agreed around your brief.</p>
+        </section>
+        <section aria-labelledby="possibilities-title" className="border-y border-white/10 py-14 sm:py-20">
+          <p className="text-xs uppercase tracking-[0.2em] text-lime-200">Built around your brief</p>
+          <h2 id="possibilities-title" className="mt-4 max-w-2xl text-3xl font-medium tracking-tight sm:text-5xl">One clear idea.<br />Many creative possibilities.</h2>
+          <div className="mt-10 grid gap-8 md:grid-cols-3">
+            {capabilities.map(({ icon: Icon, title, text }) => <div key={title}><Icon className="h-6 w-6 text-lime-200" strokeWidth={1.5} aria-hidden="true" /><h3 className="mt-5 text-xl font-medium">{title}</h3><p className="mt-3 leading-7 text-gray-400">{text}</p></div>)}
           </div>
         </section>
-
-        <section className="space-y-4">
-          {scenes.map((scene, index) => (
-            <article
-              key={scene.id}
-              className="rounded-2xl border border-gray-800 bg-gray-900/75 p-4 sm:p-5"
-            >
-              <div className="mb-4 flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 text-purple-300">
-                    <Clapperboard className="h-5 w-5" />
-                  </div>
-
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-purple-300">
-                      Scene {index + 1}
-                    </p>
-
-                    <input
-                      value={scene.title}
-                      onChange={(event) =>
-                        updateScene(
-                          scene.id,
-                          "title",
-                          event.target.value
-                        )
-                      }
-                      className="mt-1 w-full border-0 bg-transparent text-lg font-bold outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex gap-1">
-                  <IconButton
-                    label="Move up"
-                    disabled={index === 0}
-                    onClick={() => moveScene(index, -1)}
-                  >
-                    <ArrowUp className="h-4 w-4" />
-                  </IconButton>
-
-                  <IconButton
-                    label="Move down"
-                    disabled={index === scenes.length - 1}
-                    onClick={() => moveScene(index, 1)}
-                  >
-                    <ArrowDown className="h-4 w-4" />
-                  </IconButton>
-
-                  <IconButton
-                    label="Delete"
-                    onClick={() => deleteScene(scene.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </IconButton>
-                </div>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Duration in seconds">
-                  <input
-                    type="number"
-                    min={1}
-                    max={300}
-                    value={scene.duration}
-                    onChange={(event) =>
-                      updateScene(
-                        scene.id,
-                        "duration",
-                        Math.max(1, Number(event.target.value))
-                      )
-                    }
-                    className="planner-input"
-                  />
-                </Field>
-
-                <Field label="Camera direction">
-                  <input
-                    value={scene.camera}
-                    onChange={(event) =>
-                      updateScene(
-                        scene.id,
-                        "camera",
-                        event.target.value
-                      )
-                    }
-                    placeholder="Wide shot, slow push-in..."
-                    className="planner-input"
-                  />
-                </Field>
-
-                <Field label="Scene description" wide>
-                  <textarea
-                    value={scene.description}
-                    onChange={(event) =>
-                      updateScene(
-                        scene.id,
-                        "description",
-                        event.target.value
-                      )
-                    }
-                    placeholder="What happens in this scene?"
-                    className="planner-textarea"
-                  />
-                </Field>
-
-                <Field label="Lighting & mood">
-                  <textarea
-                    value={scene.lighting}
-                    onChange={(event) =>
-                      updateScene(
-                        scene.id,
-                        "lighting",
-                        event.target.value
-                      )
-                    }
-                    placeholder="Golden hour, soft contrast..."
-                    className="planner-textarea"
-                  />
-                </Field>
-
-                <Field label="Continuity notes">
-                  <textarea
-                    value={scene.notes}
-                    onChange={(event) =>
-                      updateScene(
-                        scene.id,
-                        "notes",
-                        event.target.value
-                      )
-                    }
-                    placeholder="Wardrobe, props, screen direction..."
-                    className="planner-textarea"
-                  />
-                </Field>
-              </div>
-            </article>
-          ))}
-        </section>
-
-        <Button
-          onClick={addScene}
-          variant="outline"
-          className="mt-5 h-12 w-full border-dashed border-purple-500/50 bg-purple-500/5 text-purple-200 hover:bg-purple-500/10"
-        >
-          <Plus className="mr-2 h-5 w-5" />
-          Add scene
-        </Button>
-
-        <section className="mt-6 rounded-2xl border border-gray-800 bg-gray-900/70 p-4">
-          <h2 className="font-bold">Export production plan</h2>
-
-          <div className="mt-3 grid gap-2 sm:grid-cols-3">
-            <Button
-              onClick={copyPlan}
-              variant="outline"
-              className="border-gray-700 bg-transparent"
-            >
-              <Copy className="mr-2 h-4 w-4" />
-              Copy
-            </Button>
-
-            <Button
-              onClick={exportText}
-              variant="outline"
-              className="border-gray-700 bg-transparent"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Export TXT
-            </Button>
-
-            <Button
-              onClick={exportJson}
-              variant="outline"
-              className="border-gray-700 bg-transparent"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Export JSON
-            </Button>
+        <section id="process" aria-labelledby="process-title" className="scroll-mt-8 py-14 sm:py-20">
+          <div className="grid gap-8 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
+            <div><p className="text-xs uppercase tracking-[0.2em] text-lime-200">How we work</p><h2 id="process-title" className="mt-4 text-3xl font-medium tracking-tight sm:text-5xl">From a brief<br />to a finished scene.</h2></div>
+            <ol className="grid gap-x-8 gap-y-9 sm:grid-cols-2">
+              {[
+                ["01", "Tell us the story", "Share the purpose, audience, references and where the video will be used."],
+                ["02", "Agree the direction", "We define the look, key action, shot plan and scope before production."],
+                ["03", "Create and refine", "Review the scenes with us and refine the motion, detail and sound."],
+                ["04", "Prepare the delivery", "Receive the approved edit in the format agreed for your project."],
+              ].map(([number, title, text]) => <li key={number}><span className="text-xs text-lime-200">{number}</span><h3 className="mt-3 text-lg font-medium">{title}</h3><p className="mt-2 text-sm leading-7 text-gray-400">{text}</p></li>)}
+            </ol>
           </div>
         </section>
+        <section aria-labelledby="enquiry-title" className="rounded-3xl bg-lime-200 px-6 py-10 text-[#10130c] sm:px-10 sm:py-14">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em]">Let&apos;s make something</p>
+          <div className="mt-5 flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+            <div className="max-w-xl"><h2 id="enquiry-title" className="text-4xl font-semibold tracking-tight sm:text-6xl">What do you want<br />to bring to life?</h2><p className="mt-5 leading-7 text-[#35402b]">Send a few lines about your idea, the intended use and your timeline. Add a reference if you have one.</p></div>
+            <a href={VIDEO_ENQUIRY_URL} className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-[#10130c] px-6 text-sm font-semibold text-lime-100 transition hover:bg-[#29331e]"><Mail className="h-4 w-4" aria-hidden="true" />sinisa@secus.hr<ArrowRight className="h-4 w-4" aria-hidden="true" /></a>
+          </div>
+        </section>
+        <section className="py-12" aria-label="Optional planning tool">
+          <details id="shot-planner" className="group rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-7">
+            <summary className="cursor-pointer text-lg font-medium marker:text-lime-200">Want to outline your scenes? <span className="ml-2 text-sm font-normal text-gray-400">Open the Scene &amp; Shot Planner</span></summary>
+            <p className="mb-6 mt-4 max-w-2xl text-sm leading-6 text-gray-400">Use this planning tool to organise your ideas and export a brief. Video production is arranged directly with the studio.</p>
+            <SceneShotPlanner />
+          </details>
+        </section>
+        <footer className="flex flex-wrap justify-between gap-4 border-t border-white/10 py-7 text-xs text-gray-500"><p>Director&apos;s Cut AI Pro · Independent creative studio</p><div className="flex gap-5"><Link href="/prompt-doctor" className="hover:text-white">Prompt Studio</Link><Link href="/contact" className="hover:text-white">Contact</Link><Link href="/privacy" className="hover:text-white">Privacy</Link></div></footer>
       </div>
-
-      <style jsx>{`
-        .planner-input,
-        .planner-textarea {
-          width: 100%;
-          border-radius: 0.75rem;
-          border: 1px solid rgb(55 65 81);
-          background: rgb(3 7 18 / 0.8);
-          padding: 0.75rem;
-          color: white;
-          outline: none;
-        }
-
-        .planner-input:focus,
-        .planner-textarea:focus {
-          border-color: rgb(168 85 247);
-        }
-
-        .planner-textarea {
-          min-height: 96px;
-          resize: vertical;
-        }
-      `}</style>
     </main>
-  );
-}
-
-function Field({
-  label,
-  children,
-  wide = false,
-}: {
-  label: string;
-  children: React.ReactNode;
-  wide?: boolean;
-}) {
-  return (
-    <label className={wide ? "sm:col-span-2" : ""}>
-      <span className="mb-2 block text-sm font-medium text-gray-300">
-        {label}
-      </span>
-      {children}
-    </label>
-  );
-}
-
-function SummaryCard({
-  label,
-  value,
-  fullWidth = false,
-}: {
-  label: string;
-  value: string;
-  fullWidth?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-xl border border-gray-800 bg-gray-950/70 p-3 ${
-        fullWidth ? "col-span-2 sm:col-span-1" : ""
-      }`}
-    >
-      <p className="text-xs uppercase tracking-wide text-gray-500">
-        {label}
-      </p>
-      <p className="mt-1 truncate font-semibold text-gray-200">
-        {value}
-      </p>
-    </div>
-  );
-}
-
-function IconButton({
-  children,
-  label,
-  disabled = false,
-  onClick,
-}: {
-  children: React.ReactNode;
-  label: string;
-  disabled?: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      disabled={disabled}
-      onClick={onClick}
-      className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-700 bg-gray-950 text-gray-400 transition hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
-    >
-      {children}
-    </button>
   );
 }

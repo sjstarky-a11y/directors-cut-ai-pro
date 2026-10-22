@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { VIDEO_CONTACT_EMAIL, VIDEO_ENQUIRY_URL } from "@/lib/video-studio";
 import {
   ArrowLeft,
   ExternalLink,
@@ -7,9 +8,9 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Contact Developer | Director's Cut AI Pro",
+  title: "Contact | Director's Cut AI Pro",
   description:
-    "Developer contact information for Director's Cut AI Pro.",
+    "Discuss a custom AI video project or find application support for Director's Cut AI Pro.",
 };
 
 export default function ContactPage() {
@@ -30,7 +31,7 @@ export default function ContactPage() {
           </div>
 
           <div>
-            <h1 className="text-3xl font-bold">Contact Developer</h1>
+            <h1 className="text-3xl font-bold">Let&apos;s talk</h1>
             <p className="mt-1 text-gray-400">
               Director&apos;s Cut AI Pro
             </p>
@@ -38,6 +39,12 @@ export default function ContactPage() {
         </div>
 
         <div className="space-y-6 text-gray-300">
+          <section className="rounded-xl border border-lime-200/30 bg-lime-200/5 p-5">
+            <h2 className="text-lg font-semibold text-white">Custom AI video enquiries</h2>
+            <p className="mt-2 leading-7 text-gray-400">Tell us your idea, where the video will be used and your preferred timeline. Share references if you have them.</p>
+            <a href={VIDEO_ENQUIRY_URL} className="mt-4 inline-block font-semibold text-lime-200 hover:text-lime-100">{VIDEO_CONTACT_EMAIL}</a>
+            <Link href="/editor" className="mt-3 block text-sm text-purple-300 hover:text-purple-200">Explore our video examples</Link>
+          </section>
           <section className="rounded-xl border border-gray-800 bg-gray-950/70 p-5">
             <p className="text-sm uppercase tracking-wide text-gray-500">
               Developer
@@ -78,7 +85,7 @@ export default function ContactPage() {
             </h2>
 
             <p className="mt-2 leading-7 text-gray-400">
-              For application support, bug reports, privacy questions or
+              For application support, bug reports or
               feature suggestions, open a public issue in the GitHub
               repository.
             </p>
@@ -100,8 +107,8 @@ export default function ContactPage() {
             </h2>
 
             <p className="mt-2 leading-7 text-gray-400">
-              Do not include wallet passphrases, private keys, API keys,
-              passwords or other sensitive information in a public issue.
+              For a private question, email sinisa@secus.hr. Keep personal
+              information and confidential project briefs out of public issues.
             </p>
 
             <Link
