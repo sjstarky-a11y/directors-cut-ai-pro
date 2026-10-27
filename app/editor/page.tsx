@@ -39,10 +39,17 @@ const examples = [
     duration: "4 seconds", audio: true, width: 864, height: 480,
   },
   {
-    slug: "flags", number: "03", category: "MOTION & IDENTITY", title: "A scene with its own identity.",
-    description: "Flags fill the foreground as supporters celebrate behind them. Sunlight and drifting green smoke build a distinctive matchday mood.",
-    direction: "Bring the flags forward and build the scene around colour, rhythm and celebration.",
-    notice: "Fabric in motion, layered depth and the atmosphere around the supporters.",
+    slug: "dragonfly-117", number: "03", category: "NATURE & MOTION", title: "A moment in nature.",
+    description: "A red dragonfly rests on a rock in a close view of a natural setting.",
+    direction: "Bring the dragonfly to life with gentle wing movement and a fixed camera.",
+    notice: "The delicate wings, vivid colour and texture of the rock.",
+    duration: "5 seconds", audio: false, width: 848, height: 480,
+  },
+  {
+    slug: "dragonfly-118", number: "04", category: "NATURE & SOUND", title: "The same idea, with sound.",
+    description: "A second interpretation of the dragonfly scene brings sound into the natural setting.",
+    direction: "Explore subtle movement and sound around the same visual idea.",
+    notice: "How the wings and surrounding details contribute to the scene.",
     duration: "5 seconds", audio: true, width: 864, height: 480,
   },
 ];
