@@ -52,6 +52,13 @@ const examples = [
     notice: "How the wings and surrounding details contribute to the scene.",
     duration: "5 seconds", audio: true, width: 864, height: 480,
   },
+  {
+    slug: "hawk", number: "05", category: "WILDLIFE & ACTION", title: "A still moment takes flight.",
+    description: "A hawk perched beside an ivy-covered tree spreads its wings and takes flight. Sunlit foliage frames the movement as the bird leaves the branch.",
+    direction: "Move from a quiet perch into flight while keeping the camera fixed.",
+    notice: "The feather detail, unfolding wings and transition from stillness to motion.",
+    duration: "5 seconds", audio: false, width: 848, height: 480,
+  },
 ];
 
 const capabilities = [
