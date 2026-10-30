@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowDown, ArrowRight, Camera, Film, Mail, Volume2 } from "lucide-react";
 import SceneShotPlanner from "@/components/scene-shot-planner";
+import LazyExampleVideo from "@/components/lazy-example-video";
 import { VIDEO_ENQUIRY_URL } from "@/lib/video-studio";
 
 export const metadata: Metadata = {
@@ -103,10 +104,7 @@ export default function VideoStudioPage() {
             {examples.map((example) => (
               <article key={example.slug} className="grid gap-6 lg:grid-cols-[1.65fr_1fr] lg:items-center lg:gap-10">
                 <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#141719]">
-                  <video controls playsInline preload="none" poster={`/video-studio/${example.slug}.webp`} width={example.width} height={example.height} aria-label={example.title} aria-describedby={`${example.slug}-description`} className="block h-auto w-full">
-                    <source src={`/video-studio/${example.slug}.mp4`} type="video/mp4" />
-                    Your browser does not support video playback. <a href={`/video-studio/${example.slug}.mp4`}>Open the video</a>.
-                  </video>
+                  <LazyExampleVideo slug={example.slug} title={example.title} width={example.width} height={example.height} />
                   <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-xs text-gray-400"><span>{example.duration} · {example.audio ? "Audio included" : "Silent scene"}</span><a href={`/video-studio/${example.slug}.mp4`} className="text-gray-300 underline decoration-gray-600 underline-offset-4 hover:text-lime-200">Open video</a></div>
                 </div>
                 <div>
