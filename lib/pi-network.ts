@@ -1,19 +1,12 @@
 "use client";
 
-export const PI_CONFIG = {
-  walletAddress:
-    "GDETEQ7BOAJKM7AGWN4ZKQ4VYWE45C5ODE6EFICG2NYZGE7TLBABT4CU",
-  version: "2.0",
-} as const;
+import {
+  PI_PAYMENT_PRODUCTS,
+  type PiProductId,
+} from "@/lib/pi-products";
 
-export const PI_PAYMENT_PRODUCTS = {
-  checklist_test: {
-    amount: 1,
-    memo: "Director's Cut AI Pro checklist test",
-  },
-} as const;
-
-export type PiProductId = keyof typeof PI_PAYMENT_PRODUCTS;
+export { PI_PAYMENT_PRODUCTS };
+export type { PiProductId };
 
 export interface PiUser {
   uid: string;
@@ -74,16 +67,14 @@ type PiSdk = {
 
       onCancel: (paymentId: string) => void;
 
-      onError: (
-        error: Error,
-        payment?: PiPayment
-      ) => void;
+      onError: (error: Error, payment?: PiPayment) => void;
     }
   ) => void;
 };
 
 type PaymentApiResponse = {
   payment?: PiPayment;
+  action?: string;
   error?: string;
   details?: unknown;
 };
@@ -93,11 +84,7 @@ function getPiSdk(): PiSdk {
     throw new Error("Pi SDK is only available in the browser.");
   }
 
-  const pi = (
-    window as typeof window & {
-      Pi?: PiSdk;
-    }
-  ).Pi;
+  const pi = (window as unknown as { Pi?: PiSdk }).Pi;
 
   if (!pi) {
     throw new Error("Pi SDK is not loaded.");
@@ -109,7 +96,7 @@ function getPiSdk(): PiSdk {
 async function callPaymentBackend(
   path: string,
   payload: Record<string, unknown>
-): Promise<PiPayment> {
+): Promise<PaymentApiResponse> {
   const response = await fetch(path, {
     method: "POST",
     headers: {
@@ -123,9 +110,7 @@ async function callPaymentBackend(
   try {
     data = (await response.json()) as PaymentApiResponse;
   } catch {
-    throw new Error(
-      "The payment server returned an invalid response."
-    );
+    throw new Error("The payment server returned an invalid response.");
   }
 
   if (!response.ok) {
@@ -136,13 +121,23 @@ async function callPaymentBackend(
     );
   }
 
-  if (!data.payment) {
-    throw new Error(
-      "The payment server did not return payment information."
-    );
+  return data;
+}
+
+/** Best effort: a failure here must never break the visitor's flow. */
+async function resolveInBackground(
+  path: "/api/payments/incomplete" | "/api/payments/cancel",
+  paymentId: string | undefined
+): Promise<void> {
+  if (!paymentId) {
+    return;
   }
 
-  return data.payment;
+  try {
+    await callPaymentBackend(path, { paymentId });
+  } catch (error) {
+    console.warn("Could not resolve the Pi payment:", error);
+  }
 }
 
 export class PiNetworkService {
@@ -160,15 +155,22 @@ export class PiNetworkService {
     return PiNetworkService.instance;
   }
 
+  /**
+   * Asks Pi for the "payments" permission (in addition to "username").
+   * Only called when the visitor starts a payment, so ordinary sign-in keeps
+   * requesting the username alone.
+   */
   async authenticate(): Promise<PiAuthResult> {
     const pi = getPiSdk();
 
     const auth = await pi.authenticate(
       ["username", "payments"],
       (payment) => {
-        console.warn(
-          "Incomplete Pi payment found:",
-          payment
+        // A payment left unfinished by an earlier visit: finish or cancel it
+        // on the server so that a new payment can be created.
+        void resolveInBackground(
+          "/api/payments/incomplete",
+          payment?.identifier
         );
       }
     );
@@ -187,9 +189,7 @@ export class PiNetworkService {
     return this.accessToken;
   }
 
-  async createPayment(
-    productId: PiProductId
-  ): Promise<PiPayment> {
+  async createPayment(productId: PiProductId): Promise<PiPayment> {
     const pi = getPiSdk();
     const product = PI_PAYMENT_PRODUCTS[productId];
 
@@ -229,105 +229,56 @@ export class PiNetworkService {
           },
         },
         {
-          onReadyForServerApproval: async (
-            paymentId
-          ) => {
+          onReadyForServerApproval: async (paymentId) => {
             try {
-              console.log(
-                "Payment ready for server approval:",
-                paymentId
-              );
-
-              await callPaymentBackend(
-                "/api/payments/approve",
-                {
-                  paymentId,
-                  productId,
-                }
-              );
-
-              console.log(
-                "Payment approved by server:",
-                paymentId
-              );
+              await callPaymentBackend("/api/payments/approve", {
+                paymentId,
+                productId,
+              });
             } catch (error) {
-              console.error(
-                "Payment approval failed:",
-                error
-              );
-
+              console.error("Payment approval failed:", error);
               fail(error);
             }
           },
 
-          onReadyForServerCompletion: async (
-            paymentId,
-            txid
-          ) => {
+          onReadyForServerCompletion: async (paymentId, txid) => {
             try {
-              console.log(
-                "Payment ready for server completion:",
-                paymentId,
-                txid
+              const { payment } = await callPaymentBackend(
+                "/api/payments/complete",
+                {
+                  paymentId,
+                  txid,
+                  productId,
+                }
               );
-
-              const payment =
-                await callPaymentBackend(
-                  "/api/payments/complete",
-                  {
-                    paymentId,
-                    txid,
-                    productId,
-                  }
-                );
 
               if (
-                !payment.status
-                  .transaction_verified ||
-                !payment.status
-                  .developer_completed
+                !payment ||
+                !payment.status.transaction_verified ||
+                !payment.status.developer_completed
               ) {
-                throw new Error(
-                  "Pi payment was not fully verified."
-                );
+                throw new Error("Pi payment was not fully verified.");
               }
-
-              console.log(
-                "Payment completed and verified:",
-                payment
-              );
 
               succeed(payment);
             } catch (error) {
-              console.error(
-                "Payment completion failed:",
-                error
-              );
-
+              console.error("Payment completion failed:", error);
               fail(error);
             }
           },
 
           onCancel: (paymentId) => {
-            console.log(
-              "Payment cancelled:",
-              paymentId
-            );
-
-            fail(
-              new Error(
-                "Payment was cancelled by the user."
-              )
-            );
+            void resolveInBackground("/api/payments/cancel", paymentId);
+            fail(new Error("Payment was cancelled."));
           },
 
           onError: (error, payment) => {
-            console.error(
-              "Pi payment error:",
-              error,
-              payment
+            console.error("Pi payment error:", error, payment);
+            // The payment may already have a transaction: finish or cancel it.
+            void resolveInBackground(
+              "/api/payments/incomplete",
+              payment?.identifier
             );
-
             fail(error);
           },
         }
@@ -336,5 +287,4 @@ export class PiNetworkService {
   }
 }
 
-export const piNetwork =
-  PiNetworkService.getInstance();
+export const piNetwork = PiNetworkService.getInstance();

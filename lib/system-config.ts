@@ -9,14 +9,3 @@
             SDK_URL: "https://sdk.minepi.com/pi-sdk.js",
             SANDBOX: false,
           } as const;
-
-          // Backend Configuration
-          export const BACKEND_CONFIG = {
-            BASE_URL: "https://backend.appstudio-u7cm9zhmha0ruwv8.piappengine.com",
-          } as const;
-
-          // Backend URLs
-          export const BACKEND_URLS = {
-            LOGIN: `${BACKEND_CONFIG.BASE_URL}/v1/login`,
-
-          } as const;
