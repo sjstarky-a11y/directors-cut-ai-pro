@@ -1,13 +1,22 @@
+import {
+  PI_PAYMENT_PRODUCTS,
+  isPiProductId,
+  type PiProductId,
+} from "@/lib/pi-products";
+
 export const PI_API_BASE_URL = "https://api.minepi.com/v2";
 
-export const PI_PAYMENT_PRODUCTS = {
-  checklist_test: {
-    amount: 1,
-    memo: "Director's Cut AI Pro checklist test",
-  },
-} as const;
+export { isPiProductId };
+export type { PiProductId };
 
-export type PiProductId = keyof typeof PI_PAYMENT_PRODUCTS;
+/**
+ * The Pi network this deployment accepts payments from. The app is registered
+ * as a Testnet app, so the default is "Pi Testnet". A Mainnet deployment would
+ * set PI_PAYMENT_NETWORK="Pi Network" (together with its own API key).
+ */
+function expectedPaymentNetwork(): string {
+  return process.env.PI_PAYMENT_NETWORK?.trim() || "Pi Testnet";
+}
 
 export type PiPaymentDTO = {
   identifier: string;
@@ -34,13 +43,6 @@ export type PiPaymentDTO = {
   };
 };
 
-export function isPiProductId(value: unknown): value is PiProductId {
-  return (
-    typeof value === "string" &&
-    Object.prototype.hasOwnProperty.call(PI_PAYMENT_PRODUCTS, value)
-  );
-}
-
 export function isValidPaymentId(value: unknown): value is string {
   return (
     typeof value === "string" &&
@@ -57,6 +59,15 @@ export function isValidTxid(value: unknown): value is string {
   );
 }
 
+/** True for a user-to-app payment on the expected network for one of our products. */
+export function paymentBelongsToApp(payment: PiPaymentDTO): boolean {
+  return (
+    payment.direction === "user_to_app" &&
+    payment.network === expectedPaymentNetwork() &&
+    isPiProductId(payment.metadata?.productId)
+  );
+}
+
 export function paymentMatchesProduct(
   payment: PiPaymentDTO,
   productId: PiProductId
@@ -66,7 +77,7 @@ export function paymentMatchesProduct(
 
   return (
     payment.direction === "user_to_app" &&
-    payment.network === "Pi Testnet" &&
+    payment.network === expectedPaymentNetwork() &&
     Math.abs(payment.amount - product.amount) < 0.0000001 &&
     payment.memo === product.memo &&
     metadataProductId === productId &&
