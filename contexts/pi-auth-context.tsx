@@ -54,10 +54,42 @@ declare global {
 
 interface PiAuthContextType {
   isAuthenticated: boolean;
+  isAuthenticating: boolean;
   authMessage: string;
   piAccessToken: string | null;
   userData: VerifiedPiUser | null;
+  signIn: () => Promise<void>;
   reinitialize: () => Promise<void>;
+}
+
+const AUTH_TIMEOUT_MS = 25000;
+
+/** Heuristic: the Pi Browser identifies itself in its user agent. */
+export function isPiBrowserEnvironment(): boolean {
+  return (
+    typeof navigator !== "undefined" &&
+    /PiBrowser/i.test(navigator.userAgent)
+  );
+}
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(new Error("Pi sign-in timed out.")),
+      ms
+    );
+
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
 }
 
 const PiAuthContext =
@@ -119,8 +151,11 @@ export function PiAuthProvider({
   const [isAuthenticated, setIsAuthenticated] =
     useState(false);
 
+  const [isAuthenticating, setIsAuthenticating] =
+    useState(false);
+
   const [authMessage, setAuthMessage] = useState(
-    "Initializing Pi Network..."
+    "Sign in with your Pi account to continue."
   );
 
   const [piAccessToken, setPiAccessToken] =
@@ -129,7 +164,8 @@ export function PiAuthProvider({
   const [userData, setUserData] =
     useState<VerifiedPiUser | null>(null);
 
-  const hasAutoStarted = useRef(false);
+  const isRunning = useRef(false);
+  const sdkInitialized = useRef(false);
 
   const authenticateAndVerify = async (): Promise<void> => {
     setAuthMessage("Authenticating with Pi Network...");
@@ -197,11 +233,18 @@ export function PiAuthProvider({
 
   const initializePiAndAuthenticate =
     async (): Promise<void> => {
+      if (isRunning.current) {
+        return;
+      }
+
+      isRunning.current = true;
+      setIsAuthenticating(true);
+
       try {
         setIsAuthenticated(false);
         setAuthMessage("Loading Pi Network SDK...");
 
-        await loadPiSDK();
+        await withTimeout(loadPiSDK(), AUTH_TIMEOUT_MS);
 
         if (typeof window.Pi === "undefined") {
           throw new Error(
@@ -209,14 +252,18 @@ export function PiAuthProvider({
           );
         }
 
-        setAuthMessage("Initializing Pi Network...");
+        if (!sdkInitialized.current) {
+          setAuthMessage("Initializing Pi Network...");
 
-        await window.Pi.init({
-          version: "2.0",
-          sandbox: PI_NETWORK_CONFIG.SANDBOX,
-        });
+          await window.Pi.init({
+            version: "2.0",
+            sandbox: PI_NETWORK_CONFIG.SANDBOX,
+          });
 
-        await authenticateAndVerify();
+          sdkInitialized.current = true;
+        }
+
+        await withTimeout(authenticateAndVerify(), AUTH_TIMEOUT_MS);
 
         setAuthMessage("Pi authentication successful.");
         setIsAuthenticated(true);
@@ -231,26 +278,39 @@ export function PiAuthProvider({
         setUserData(null);
 
         setAuthMessage(
-          "Failed to authenticate or verify the Pi account. Please refresh and try again."
+          isPiBrowserEnvironment()
+            ? "Failed to authenticate or verify the Pi account. Please try again."
+            : "Pi sign-in is only available inside the Pi Browser. Please open Director's Cut AI Pro from the Pi Browser."
         );
+      } finally {
+        isRunning.current = false;
+        setIsAuthenticating(false);
       }
     };
 
-
+  // Inside the Pi Browser, start sign-in automatically, but only after the
+  // page has had a moment to render so the visitor sees the home page first.
+  // Outside the Pi Browser nothing happens until the visitor taps the button.
   useEffect(() => {
-    if (hasAutoStarted.current) {
+    if (!isPiBrowserEnvironment()) {
       return;
     }
 
-    hasAutoStarted.current = true;
-    void initializePiAndAuthenticate();
+    const timer = window.setTimeout(() => {
+      void initializePiAndAuthenticate();
+    }, 1500);
+
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value: PiAuthContextType = {
     isAuthenticated,
+    isAuthenticating,
     authMessage,
     piAccessToken,
     userData,
+    signIn: initializePiAndAuthenticate,
     reinitialize: initializePiAndAuthenticate,
   };
 
