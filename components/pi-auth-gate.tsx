@@ -1,12 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeft, Loader2, LockKeyhole } from "lucide-react";
-import {
-  isPiBrowserEnvironment,
-  usePiAuth,
-} from "@/contexts/pi-auth-context";
+import { usePiAuth } from "@/contexts/pi-auth-context";
 
 /**
  * Shows its children only after the visitor has signed in with a Pi account
@@ -21,20 +17,6 @@ export function PiAuthGate({
 }) {
   const { isAuthenticated, isAuthenticating, authMessage, signIn } =
     usePiAuth();
-  const autoStarted = useRef(false);
-
-  // Inside the Pi Browser, start the sign-in automatically once.
-  useEffect(() => {
-    if (
-      !isAuthenticated &&
-      !autoStarted.current &&
-      isPiBrowserEnvironment()
-    ) {
-      autoStarted.current = true;
-      void signIn();
-    }
-  }, [isAuthenticated, signIn]);
-
   if (isAuthenticated) {
     return <>{children}</>;
   }
@@ -56,8 +38,9 @@ export function PiAuthGate({
 
         <p className="mt-3 text-sm leading-6 text-gray-400">
           This part of Director&apos;s Cut AI Pro is available to
-          signed-in Pioneers. Sign-in uses Pi Network authentication
-          and only shares your Pi username.
+          signed-in Pioneers. When you tap the button, Pi will ask you to
+          allow this app to read your Pi username. Nothing else is shared,
+          and you can cancel.
         </p>
 
         <p
