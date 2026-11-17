@@ -3,16 +3,25 @@
 import { usePiAuth } from "@/contexts/pi-auth-context";
 
 export function PiLoginButton() {
-  const { isAuthenticated, isAuthenticating, userData, signIn } =
+  const { isAuthenticated, isAuthenticating, userData, signIn, signOut } =
     usePiAuth();
 
   if (isAuthenticated && userData) {
     return (
-      <span
-        className="inline-flex items-center justify-center rounded-md border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-sm font-semibold text-emerald-200"
-        title="Signed in with Pi"
-      >
-        @{userData.username}
+      <span className="inline-flex items-center gap-2">
+        <span
+          className="inline-flex items-center justify-center rounded-md border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-sm font-semibold text-emerald-200"
+          title="Signed in with Pi"
+        >
+          @{userData.username}
+        </span>
+        <button
+          type="button"
+          onClick={signOut}
+          className="text-xs text-gray-400 underline hover:text-gray-200"
+        >
+          Sign out
+        </button>
       </span>
     );
   }

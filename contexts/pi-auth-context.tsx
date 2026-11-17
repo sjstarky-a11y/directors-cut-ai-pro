@@ -58,8 +58,35 @@ interface PiAuthContextType {
   authMessage: string;
   piAccessToken: string | null;
   userData: VerifiedPiUser | null;
+  /** Consent previously given by the visitor on this device. */
+  hasConsent: boolean;
+  /** User-initiated sign-in. Records the visitor's consent, then calls Pi. */
   signIn: () => Promise<void>;
+  /** Forgets the consent and the local session (the visitor must opt in again). */
+  signOut: () => void;
   reinitialize: () => Promise<void>;
+}
+
+const CONSENT_STORAGE_KEY = "dcp-pi-signin-consent-v1";
+
+function readStoredConsent(): boolean {
+  try {
+    return window.localStorage.getItem(CONSENT_STORAGE_KEY) === "granted";
+  } catch {
+    return false;
+  }
+}
+
+function writeStoredConsent(granted: boolean): void {
+  try {
+    if (granted) {
+      window.localStorage.setItem(CONSENT_STORAGE_KEY, "granted");
+    } else {
+      window.localStorage.removeItem(CONSENT_STORAGE_KEY);
+    }
+  } catch {
+    // Storage can be unavailable; consent then only lasts for this visit.
+  }
 }
 
 const AUTH_TIMEOUT_MS = 25000;
@@ -163,6 +190,8 @@ export function PiAuthProvider({
 
   const [userData, setUserData] =
     useState<VerifiedPiUser | null>(null);
+
+  const [hasConsent, setHasConsent] = useState(false);
 
   const isRunning = useRef(false);
   const sdkInitialized = useRef(false);
@@ -288,10 +317,17 @@ export function PiAuthProvider({
       }
     };
 
-  // Inside the Pi Browser, start sign-in automatically, but only after the
-  // page has had a moment to render so the visitor sees the home page first.
-  // Outside the Pi Browser nothing happens until the visitor taps the button.
+  // Nothing is sent to Pi until the visitor has agreed. A visitor who agreed
+  // earlier on this device (and is inside the Pi Browser) is signed back in
+  // after the page has rendered. A first-time visitor sees a consent notice
+  // instead (see PiConsentBanner) and Pi shows its own Allow/Cancel dialog.
   useEffect(() => {
+    if (!readStoredConsent()) {
+      return;
+    }
+
+    setHasConsent(true);
+
     if (!isPiBrowserEnvironment()) {
       return;
     }
@@ -304,13 +340,30 @@ export function PiAuthProvider({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const signIn = async (): Promise<void> => {
+    writeStoredConsent(true);
+    setHasConsent(true);
+    await initializePiAndAuthenticate();
+  };
+
+  const signOut = (): void => {
+    writeStoredConsent(false);
+    setHasConsent(false);
+    setIsAuthenticated(false);
+    setPiAccessToken(null);
+    setUserData(null);
+    setAuthMessage("Sign in with your Pi account to continue.");
+  };
+
   const value: PiAuthContextType = {
     isAuthenticated,
     isAuthenticating,
     authMessage,
     piAccessToken,
     userData,
-    signIn: initializePiAndAuthenticate,
+    hasConsent,
+    signIn,
+    signOut,
     reinitialize: initializePiAndAuthenticate,
   };
 
