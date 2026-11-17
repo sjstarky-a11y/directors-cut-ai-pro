@@ -30,7 +30,8 @@ const MODES: { value: PromptMode; label: string; hint: string }[] = [
 ];
 
 const FORMATS: VideoFormat[] = ["16:9", "9:16", "1:1"];
-const DURATIONS = [5, 10, 15, 30, 60];
+// Most AI video models make clips of about 5-10 s (15 s at the very most).
+const DURATIONS = [5, 8, 10, 15];
 const LANGUAGES: OutputLanguage[] = ["English", "Croatian"];
 const MAX_INPUT = 1200;
 
@@ -124,7 +125,7 @@ export default function StudioPage() {
   const [input, setInput] = useState("");
   const [mode, setMode] = useState<PromptMode>("cinematic");
   const [format, setFormat] = useState<VideoFormat>("16:9");
-  const [duration, setDuration] = useState(10);
+  const [duration, setDuration] = useState(8);
   const [language, setLanguage] = useState<OutputLanguage>("English");
   const [options, setOptions] = useState<PromptDoctorOptions | null>(null);
   const [result, setResult] = useState<PromptDoctorResult | null>(null);
@@ -266,6 +267,9 @@ export default function StudioPage() {
                   <option key={d} value={d}>{d} s</option>
                 ))}
               </select>
+              <p className="mt-1.5 text-xs leading-5 text-gray-500">
+                Most AI video tools make clips of 5-10 s.
+              </p>
             </div>
             <div>
               <label htmlFor="language" className="text-sm font-semibold">
@@ -283,6 +287,11 @@ export default function StudioPage() {
               </select>
             </div>
           </div>
+
+          <p className="mt-4 text-xs leading-5 text-gray-500">
+            Longer than 15 s? Generate several clips and join them. The shot
+            plan shows how to split the idea.
+          </p>
 
           {error && (
             <p className="mt-4 text-sm text-amber-300" role="alert">

@@ -254,11 +254,13 @@ function buildShots(
   lighting: string
 ): ShotPlanItem[] {
   const count =
-    options.duration <= 10
-      ? 3
-      : options.duration <= 30
-        ? 5
-        : 6;
+    options.duration <= 6
+      ? 2
+      : options.duration <= 10
+        ? 3
+        : options.duration <= 30
+          ? 5
+          : 6;
 
   const durations = distributeDurations(options.duration, count);
 
@@ -331,7 +333,17 @@ function buildShots(
   const source =
     options.language === "Croatian" ? croatian : english;
 
-  return source.slice(0, count).map((shot, index) => ({
+  // Short plans keep the opening and the payoff instead of just cutting the
+  // list off, so even a 5-10 s idea ends on its strongest moment.
+  const beats: Record<number, number[]> = {
+    2: [0, 4],
+    3: [0, 2, 4],
+  };
+  const chosen = beats[count]
+    ? beats[count].map((i) => source[i])
+    : source.slice(0, count);
+
+  return chosen.map((shot, index) => ({
     number: index + 1,
     duration: durations[index],
     title: shot.title,
