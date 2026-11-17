@@ -12,6 +12,7 @@ import {
   MonitorCog,
   ShieldCheck,
   Sparkles,
+  Wand2,
 } from "lucide-react";
 import { PiLoginButton } from "@/components/pi-login-button";
 
@@ -69,8 +70,15 @@ export default function HomePage() {
 
             <div className="mt-9 flex flex-col flex-wrap justify-center gap-3 sm:flex-row">
               <Link
+                href="/studio"
+                className="inline-flex h-12 items-center justify-center rounded-md bg-gradient-to-r from-purple-600 to-pink-600 px-7 text-base font-semibold text-white transition hover:brightness-110"
+              >
+                <Wand2 className="mr-2 h-5 w-5" />
+                Try Prompt Doctor online
+              </Link>
+              <Link
                 href="/prompt-doctor"
-                className="inline-flex h-12 items-center justify-center rounded-md bg-gradient-to-r from-purple-600 to-cyan-500 px-7 text-base font-semibold text-[#090a0f] transition hover:brightness-110"
+                className="inline-flex h-12 items-center justify-center rounded-md border border-purple-400/40 bg-purple-500/10 px-7 text-base font-semibold text-purple-100 transition hover:bg-purple-500/20"
               >
                 <Sparkles className="mr-2 h-5 w-5" />
                 Explore MediaForge v0.4
