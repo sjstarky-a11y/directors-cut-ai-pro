@@ -27,7 +27,7 @@ export default function PrivacyPage() {
           <div>
             <h1 className="text-3xl font-bold">Privacy Policy</h1>
             <p className="mt-1 text-sm text-gray-400">
-              Effective date: July 15, 2026
+              Effective date: November 17, 2026
             </p>
           </div>
         </div>
@@ -74,6 +74,15 @@ export default function PrivacyPage() {
               are stored in your browser&apos;s local storage. This data
               remains on the device and browser where it was created
               unless you manually export or delete it.
+            </p>
+            <p className="mt-2">
+              Prompts you save in Prompt Doctor Lite (including the ones
+              you mark as favourites) are kept in your browser&apos;s
+              local storage, separately for each Pi account, and are never
+              sent to our servers. The same storage remembers that you
+              agreed to sign in with Pi on this device. You can delete a
+              saved prompt in the app, or clear the site data in your
+              browser to remove everything.
             </p>
           </section>
 
