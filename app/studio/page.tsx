@@ -1,15 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
+  Bookmark,
   Check,
   Copy,
   Download,
   Sparkles,
+  Star,
+  Trash2,
   Wand2,
 } from "lucide-react";
+
+import { usePiAuth } from "@/contexts/pi-auth-context";
+import {
+  addSavedPrompt,
+  loadSavedPrompts,
+  MAX_SAVED_PROMPTS,
+  newSavedPrompt,
+  persistSavedPrompts,
+  type SavedPrompt,
+} from "@/lib/studio-history";
 
 import {
   formatPromptDoctorResult,
@@ -131,12 +144,101 @@ export default function StudioPage() {
   const [result, setResult] = useState<PromptDoctorResult | null>(null);
   const [error, setError] = useState("");
 
+  const { userData } = usePiAuth();
+  const userId = userData?.uid ?? null;
+  const [saved, setSaved] = useState<SavedPrompt[]>([]);
+  const [savedId, setSavedId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<"all" | "favorites">("all");
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [notice, setNotice] = useState("");
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Saved prompts live only in this browser, in a separate list per Pi user.
+  useEffect(() => {
+    setSaved(userId ? loadSavedPrompts(userId) : []);
+  }, [userId]);
+
+  const commit = (items: SavedPrompt[]): boolean => {
+    if (!userId) return false;
+
+    if (!persistSavedPrompts(userId, items)) {
+      setNotice(
+        "Could not save in this browser (storage is blocked or full)."
+      );
+      return false;
+    }
+
+    setSaved(items);
+    setNotice("");
+    return true;
+  };
+
+  const saveCurrent = () => {
+    if (!result || !options || savedId) return;
+
+    const entry = newSavedPrompt(options, result);
+    const next = addSavedPrompt(saved, entry);
+
+    if (!next) {
+      setNotice(
+        `You have ${MAX_SAVED_PROMPTS} favourites. Remove one to save more.`
+      );
+      return;
+    }
+
+    if (commit(next)) setSavedId(entry.id);
+  };
+
+  const toggleFavorite = (id: string) =>
+    commit(
+      saved.map((item) =>
+        item.id === id ? { ...item, favorite: !item.favorite } : item
+      )
+    );
+
+  const removeSaved = (id: string) => {
+    if (confirmId !== id) {
+      setConfirmId(id);
+      window.setTimeout(
+        () => setConfirmId((current) => (current === id ? null : current)),
+        4000
+      );
+      return;
+    }
+
+    if (commit(saved.filter((item) => item.id !== id))) {
+      if (savedId === id) setSavedId(null);
+      setConfirmId(null);
+    }
+  };
+
+  const openSaved = (item: SavedPrompt) => {
+    setInput(item.options.input);
+    setMode(item.options.mode);
+    setFormat(item.options.format);
+    setDuration(item.options.duration);
+    setLanguage(item.options.language);
+    setOptions(item.options);
+    setResult(item.result);
+    setSavedId(item.id);
+    setError("");
+    window.setTimeout(
+      () =>
+        resultsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        }),
+      60
+    );
+  };
+
   const run = () => {
     const next: PromptDoctorOptions = { input, mode, format, duration, language };
 
     try {
       setResult(generatePromptDoctorResult(next));
       setOptions(next);
+      setSavedId(null);
       setError("");
     } catch {
       setResult(null);
@@ -310,7 +412,7 @@ export default function StudioPage() {
         </section>
 
         {result && options && (
-          <div className="mt-6 space-y-4" aria-live="polite">
+          <div ref={resultsRef} className="mt-6 scroll-mt-4 space-y-4" aria-live="polite">
             <ResultBlock title="Improved prompt" text={result.improvedPrompt} highlight />
             <ResultBlock title="Diagnosis" text={result.diagnosis} />
             <ResultBlock title="Camera direction" text={result.cameraDirection} />
@@ -343,6 +445,19 @@ export default function StudioPage() {
             </section>
 
             <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={saveCurrent}
+                disabled={!!savedId}
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-purple-400/50 bg-purple-500/15 px-3 text-xs font-semibold text-purple-100 transition hover:bg-purple-500/25 disabled:cursor-default disabled:border-emerald-400/40 disabled:bg-emerald-500/10 disabled:text-emerald-200"
+              >
+                {savedId ? (
+                  <Check className="h-3.5 w-3.5" />
+                ) : (
+                  <Bookmark className="h-3.5 w-3.5" />
+                )}
+                {savedId ? "Saved" : "Save"}
+              </button>
               <CopyButton
                 text={formatPromptDoctorResult(options, result)}
                 label="Copy everything"
@@ -358,6 +473,122 @@ export default function StudioPage() {
             </div>
           </div>
         )}
+
+        {notice && (
+          <p className="mt-4 text-sm text-amber-300" role="alert">
+            {notice}
+          </p>
+        )}
+
+        <section className="mt-10" aria-labelledby="saved-title">
+          <div className="flex items-end justify-between gap-3">
+            <div>
+              <h2 id="saved-title" className="text-lg font-semibold">
+                My prompts
+              </h2>
+              <p className="mt-1 text-xs text-gray-500">
+                Saved only on this device ({saved.length}/{MAX_SAVED_PROMPTS}).
+              </p>
+            </div>
+            <div className="flex gap-1 text-xs">
+              {(["all", "favorites"] as const).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setFilter(value)}
+                  aria-pressed={filter === value}
+                  className={`rounded-full border px-3 py-1.5 font-semibold transition ${
+                    filter === value
+                      ? "border-purple-400 bg-purple-500/15 text-white"
+                      : "border-gray-700 text-gray-400 hover:border-gray-600"
+                  }`}
+                >
+                  {value === "all" ? "All" : "Favourites"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {(() => {
+            const visible = saved.filter(
+              (item) => filter === "all" || item.favorite
+            );
+
+            if (visible.length === 0) {
+              return (
+                <p className="mt-4 rounded-xl border border-dashed border-gray-800 p-4 text-sm text-gray-500">
+                  {saved.length === 0
+                    ? "Nothing saved yet. Use Save under a result to keep it here."
+                    : "No favourites yet. Tap the star on a saved prompt."}
+                </p>
+              );
+            }
+
+            return (
+              <ul className="mt-4 space-y-3">
+                {visible.map((item) => (
+                  <li
+                    key={item.id}
+                    className="rounded-xl border border-gray-800 bg-gray-900/60 p-4"
+                  >
+                    <p className="line-clamp-2 text-sm leading-6 text-gray-100">
+                      {item.options.input}
+                    </p>
+                    <p className="mt-1 text-xs text-gray-500">
+                      {item.options.mode} · {item.options.format} ·{" "}
+                      {item.options.duration} s · {item.options.language} ·{" "}
+                      {new Date(item.savedAt).toLocaleDateString()}
+                    </p>
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => openSaved(item)}
+                        className="inline-flex h-8 items-center rounded-md border border-gray-700 bg-gray-900 px-3 text-xs font-semibold text-gray-200 transition hover:border-purple-400/50"
+                      >
+                        Open
+                      </button>
+                      <CopyButton
+                        text={item.result.improvedPrompt}
+                        label="Copy prompt"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => toggleFavorite(item.id)}
+                        aria-pressed={item.favorite}
+                        aria-label={
+                          item.favorite
+                            ? "Remove from favourites"
+                            : "Add to favourites"
+                        }
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-700 bg-gray-900 transition hover:border-amber-300/50"
+                      >
+                        <Star
+                          className={`h-4 w-4 ${
+                            item.favorite
+                              ? "fill-amber-300 text-amber-300"
+                              : "text-gray-400"
+                          }`}
+                        />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => removeSaved(item.id)}
+                        className={`ml-auto inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-xs font-semibold transition ${
+                          confirmId === item.id
+                            ? "border-red-400/60 bg-red-500/15 text-red-200"
+                            : "border-gray-700 bg-gray-900 text-gray-400 hover:border-red-400/40"
+                        }`}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        {confirmId === item.id ? "Tap again to delete" : "Delete"}
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            );
+          })()}
+        </section>
 
         <section className="mt-10 rounded-2xl border border-gray-800 bg-gray-900/40 p-5 text-sm leading-7 text-gray-400">
           <p className="font-semibold text-gray-200">Want the full version?</p>
