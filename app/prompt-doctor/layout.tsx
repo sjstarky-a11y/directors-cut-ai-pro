@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import { PiAuthGate } from "@/components/pi-auth-gate";
 import { RELEASE_DESCRIPTION } from "@/lib/mediaforge-release";
 
 export const metadata: Metadata = {
@@ -22,5 +21,5 @@ export default function PromptDoctorLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  return <PiAuthGate>{children}</PiAuthGate>;
+  return <>{children}</>;
 }
