@@ -3,6 +3,7 @@
 import React, {
   createContext,
   useContext,
+  useEffect,
   useRef,
   useState,
   type ReactNode,
@@ -286,6 +287,22 @@ export function PiAuthProvider({
         setIsAuthenticating(false);
       }
     };
+
+  // Inside the Pi Browser, start sign-in automatically, but only after the
+  // page has had a moment to render so the visitor sees the home page first.
+  // Outside the Pi Browser nothing happens until the visitor taps the button.
+  useEffect(() => {
+    if (!isPiBrowserEnvironment()) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      void initializePiAndAuthenticate();
+    }, 1500);
+
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const value: PiAuthContextType = {
     isAuthenticated,
