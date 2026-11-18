@@ -14,6 +14,7 @@ import {
   Sparkles,
   Wand2,
 } from "lucide-react";
+import { DcpLogo } from "@/components/dcp-logo";
 import { PiLoginButton } from "@/components/pi-login-button";
 
 import { RELEASE_URL, WINDOWS_URL, LINUX_URL, QUICKSTART_URL, SUPPORT_URL } from "@/lib/mediaforge-release";
@@ -24,9 +25,7 @@ export default function HomePage() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <header className="flex flex-wrap items-center justify-between gap-4 py-6">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 font-bold">
-              DC
-            </div>
+            <DcpLogo />
             <div>
               <p className="text-xl font-bold sm:text-2xl">Director&apos;s Cut AI Pro</p>
               <p className="text-sm text-gray-400">AI video pre-production platform</p>
