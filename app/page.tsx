@@ -43,19 +43,9 @@ export default function HomePage() {
           </nav>
         </header>
 
-        <section className="relative py-16 sm:py-24">
+        <section className="relative pb-16 pt-6 sm:py-24">
           <div className="pointer-events-none absolute left-1/2 top-12 h-72 w-72 -translate-x-1/2 rounded-full bg-purple-500/20 blur-3xl" />
           <div className="relative mx-auto max-w-5xl text-center">
-            <Link
-              href={RELEASE_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-200 transition hover:bg-emerald-500/15"
-            >
-              <Sparkles className="h-4 w-4" />
-              MediaForge Prompt Studio v0.4 Preview
-            </Link>
-
             <h1 className="text-4xl font-bold leading-tight sm:text-6xl lg:text-7xl">
               Turn rough ideas into
               <span className="block bg-gradient-to-r from-purple-400 via-fuchsia-400 to-cyan-300 bg-clip-text text-transparent">
@@ -63,12 +53,12 @@ export default function HomePage() {
               </span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-400 sm:text-xl sm:leading-8">
+            <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-gray-400 sm:mt-6 sm:text-xl sm:leading-8">
               Refine the prompt, review changes to your idea, preview the scene,
               and prepare it for your video workflow — on your own computer.
             </p>
 
-            <div className="mt-9 flex flex-col flex-wrap justify-center gap-3 sm:flex-row">
+            <div className="mt-7 flex flex-col flex-wrap justify-center gap-3 sm:mt-9 sm:flex-row">
               <Link
                 href="/studio"
                 className="inline-flex h-12 items-center justify-center rounded-md bg-gradient-to-r from-purple-600 to-pink-600 px-7 text-base font-semibold text-white transition hover:brightness-110"
@@ -106,6 +96,16 @@ export default function HomePage() {
             <p className="mx-auto mt-4 max-w-4xl text-sm leading-6 text-emerald-300/80">
               Windows & Linux · CPU, NVIDIA & Intel · Local processing through Docker
             </p>
+
+            <Link
+              href={RELEASE_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-200 transition hover:bg-emerald-500/15"
+            >
+              <Sparkles className="h-4 w-4" />
+              MediaForge Prompt Studio v0.4 Preview
+            </Link>
           </div>
         </section>
 
