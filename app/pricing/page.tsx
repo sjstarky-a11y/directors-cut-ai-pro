@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, Coins, Download, Sparkles } from "lucide-react";
+import { DcpLogo } from "@/components/dcp-logo";
 import { PiLoginButton } from "@/components/pi-login-button";
 
 const plans = ["Basic", "Pro", "Enterprise"];
@@ -12,9 +13,7 @@ export default function PricingPage() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <header className="flex flex-wrap items-center justify-between gap-4 py-6">
           <Link href="/" className="flex min-w-0 items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 font-bold">
-              DC
-            </div>
+            <DcpLogo />
             <div className="min-w-0">
               <p className="truncate text-lg font-bold sm:text-2xl">
                 Director&apos;s Cut AI Pro
